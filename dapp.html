@@ -2,90 +2,10 @@
 
 <script>
 // Contract Info
-const ERC721ADDRESS = '0x6683f68272c8B7d91ac3a7D5D90bbaF259dd72FD'
-const ERC721ABI = [
-{
-"inputs":[
+const network = 'rinkeby'
+const ERC721ADDRESS = '0xe0EFd5DE2F4C041BBc3559e4557fD8824Ea1139A'
+const ERC721ABI = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"int256","name":"old","type":"int256"},{"indexed":false,"internalType":"int256","name":"current","type":"int256"}],"name":"BTCETHPriceUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"int256","name":"old","type":"int256"},{"indexed":false,"internalType":"int256","name":"current","type":"int256"}],"name":"BTCETHPriceUpdated","type":"event"},{"inputs":[],"name":"getBitcoinPriceInWei","outputs":[{"internalType":"int256","name":"","type":"int256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"publicSaleStart_timestampInS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"purchase","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
 
-],
-"name":"purchase",
-"outputs":[
-
-],
-"stateMutability":"payable",
-"type":"function"
-},
-{
-"inputs":[
-
-],
-"name":"maxSupply",
-"outputs":[
-{
-"internalType":"uint256",
-"name":"",
-"type":"uint256"
-}
-],
-"stateMutability":"view",
-"type":"function"
-},
-{
-"inputs":[
-
-],
-"name":"totalSupply",
-"outputs":[
-{
-"internalType":"uint256",
-"name":"",
-"type":"uint256"
-}
-],
-"stateMutability":"view",
-"type":"function"
-},
-{
-"anonymous":false,
-"inputs":[
-{
-"indexed":true,
-"internalType":"address",
-"name":"from",
-"type":"address"
-},
-{
-"indexed":true,
-"internalType":"address",
-"name":"to",
-"type":"address"
-},
-{
-"indexed":true,
-"internalType":"uint256",
-"name":"tokenId",
-"type":"uint256"
-}
-],
-"name":"Transfer",
-"type":"event"
-},
-{
-"inputs":[
-
-],
-"name":"getPrice",
-"outputs":[
-{
-"internalType":"uint256",
-"name":"",
-"type":"uint256"
-}
-],
-"stateMutability":"view",
-"type":"function"
-}
-]
 </script>
 
 <script>
@@ -133,16 +53,22 @@ const onLoadHandler = () => {
 
   const triggerPurchase = () => {
     txLabel.innerHTML = 'Waiting for confirmation'
-
+    var txHash = 0
     Erc721Instance.methods.getPrice().call()
       .then((amount) => {
         console.log('priceWei: ', amount)
 
         Erc721Instance.methods.purchase().send({from: walletAddress, value: amount})
+          .on('transactionHash', (hash) => {
+            console.log('transactionHash: ', hash)
+            txHash = hash
+          })
           .on('receipt', (receipt) => {
             console.log('receipt: ', receipt)
 
-            txLabel.innerHTML = 'Transaction confirmed, enjoy your 🍕!'
+            txLabel.innerHTML = "Transaction confirmed, enjoy your 🍕! <p> " +
+              "<a href='https://" + network + ".etherscan.io/tx/" +
+              txHash + "' target='_blank'> Transaction link </a>"
 
             updateValues()
           })
