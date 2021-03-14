@@ -1,0 +1,20 @@
+# Hardhat compile folders
+artifacts
+cache
+
+# Package directories
+node_modules
+
+# Webpack directories
+.webpack
+
+# Operating system files
+.DS_Store
+
+# IDEs
+.idea
+.vscode
+
+# Logs
+*.log
+npm-debug.log*
