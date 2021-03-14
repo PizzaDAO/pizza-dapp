@@ -171,8 +171,8 @@ const initWeb3 = () => {
 
 const promptMetamask = () => {
   window.ethereum.enable()
-    .then(() => {
-      updateBalance()
+    .then(async () => {
+      await updateBalance()
     }).catch((err) => {
       console.log(err)
     })
@@ -246,7 +246,7 @@ const updateValues = () => {
 
 const handleUser = () => {
   web3.eth.getAccounts()
-    .then((accounts) => {
+    .then(async (accounts) => {
       addresses = accounts
 
       console.log('accounts: ', accounts)
@@ -256,7 +256,7 @@ const handleUser = () => {
       } else {
         console.log('User is logged in')
 
-        updateBalance()
+        await updateBalance()
       }
     }).catch((err) => {
       console.log('Error fetching accounts: ', err)
