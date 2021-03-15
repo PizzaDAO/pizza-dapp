@@ -8,12 +8,8 @@ const ERC721ABI = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":
 </script>
 
 <script>
-console.log('Script started')
-
 const ethSymbol = 'Ξ'
 const btcSymbol = '₿'
-
-// Placeholder values
 let maxSupply = 10000
 let totalSupply = 0
 let buyPrice = 0.0001
@@ -22,13 +18,10 @@ let addresses = 0
 let btcPrice = 30
 let metamaskInstalled = false
 let Erc721Instance
-
 const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
 const onLoadHandler = () => {
-  console.log('Loading window')
-
   const walletButton = document.querySelector('#walletButton')
   const balanceLabel = document.querySelector('#balanceLabel')
   const ethPriceLabel = document.querySelector('#ethPriceLabel')
@@ -37,17 +30,18 @@ const onLoadHandler = () => {
   const buyButton = document.querySelector('#buyButton')
   const contractLabel = document.querySelector('#contractLabel')
   const txLabel = document.querySelector('#txLabel')
-
   balanceLabel.innerHTML = '--' + ' ' + ethSymbol
   ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
   btcPriceLabel.innerHTML = '--' + ' ' + btcSymbol
   pizzasLabel.innerHTML = '--'
   contractLabel.innerHTML = "Contract Address: <p> <a href='https://" + network + ".etherscan.io/address/" +
   ERC721ADDRESS + "' target='_blank'> " + ERC721ADDRESS + " </a>"
+  txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned'
 
   const promptMetamask = () => {
     window.ethereum.enable()
       .then(async () => {
+        walletButton.innerHTML = "<center>Connected</center>"
         await updateBalance()
       }).catch((err) => {
       console.log(err)
@@ -56,9 +50,8 @@ const onLoadHandler = () => {
 
   const triggerPurchase = () => {
     txLabel.innerHTML = 'Waiting for confirmation'
-
     var txHash = 0
-    Erc721Instance.methods.getPriceInWei().call()
+    Erc721Instance.methods.getPrice().call()
       .then((weiValue) => {
         console.log('weiValue: ', weiValue)
 
@@ -95,7 +88,7 @@ const onLoadHandler = () => {
 
   const updateValues = () => {
 
-    Erc721Instance.methods.getPriceInWei().call()
+    Erc721Instance.methods.getPrice().call()
       .then((amount) => {
         buyPrice = web3.utils.fromWei(amount)
         const roundPrice = parseFloat(buyPrice).toFixed(4)
@@ -113,7 +106,7 @@ const onLoadHandler = () => {
 
         console.log('maxSupply: ', amount)
 
-        pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply)
+        pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
       })
       .catch((error) => {
         console.log('maxSupply failed: ', error)
@@ -125,7 +118,7 @@ const onLoadHandler = () => {
 
         console.log('totalSupply: ', amount)
 
-        pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply)
+        pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
       })
       .catch((error) => {
         console.log('totalSupply failed: ', err)
@@ -154,9 +147,10 @@ const onLoadHandler = () => {
 
         if (!accounts.length) {
           console.log('User is logged out')
+          walletButton.innerHTML = "Connect Wallet"
         } else {
           console.log('User is logged in')
-
+          walletButton.innerHTML = "<center>Connected</center>"
           await updateBalance()
         }
       }).catch((err) => {
