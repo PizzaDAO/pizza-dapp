@@ -59,10 +59,10 @@ const onLoadHandler = () => {
 
     var txHash = 0
     Erc721Instance.methods.getPriceInWei().call()
-      .then((amount) => {
-        console.log('priceWei: ', amount)
+      .then((weiValue) => {
+        console.log('weiValue: ', weiValue)
 
-        const roundAmount = parseFloat(1.2 * value).toFixed(0)
+        const roundAmount = parseFloat(1.2 * weiValue).toFixed(0)
 
         console.log('roundAmount: ', roundAmount)
 
