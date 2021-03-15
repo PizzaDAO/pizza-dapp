@@ -2,252 +2,8 @@
 
 <script>
 const network = 'rinkeby'
-const ERC721ADDRESS = '0x50De9438e554E7512277BF9F06D44465adF405D3'
-const ERC721ABI = [
-{
-anonymous: false,
-inputs: [
-{
-indexed: false,
-internalType: "uint256",
-name: "old",
-type: "uint256"
-},
-{
-indexed: false,
-internalType: "uint256",
-name: "current",
-type: "uint256"
-}
-],
-name: "BTCETHPriceUpdated",
-type: "event"
-},
-{
-anonymous: false,
-inputs: [
-{
-indexed: true,
-internalType: "address",
-name: "previousOwner",
-type: "address"
-},
-{
-indexed: true,
-internalType: "address",
-name: "newOwner",
-type: "address"
-}
-],
-name: "OwnershipTransferred",
-type: "event"
-},
-{
-anonymous: false,
-inputs: [
-{
-indexed: true,
-internalType: "address",
-name: "from",
-type: "address"
-},
-{
-indexed: true,
-internalType: "address",
-name: "to",
-type: "address"
-},
-{
-indexed: true,
-internalType: "uint256",
-name: "tokenId",
-type: "uint256"
-}
-],
-name: "Transfer",
-type: "event"
-},
-{
-inputs: [
-{
-internalType: "address",
-name: "owner",
-type: "address"
-}
-],
-name: "balanceOf",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-anonymous: false,
-inputs: [
-{
-indexed: false,
-internalType: "uint256",
-name: "old",
-type: "uint256"
-},
-{
-indexed: false,
-internalType: "uint256",
-name: "current",
-type: "uint256"
-}
-],
-name: "BTCETHPriceUpdated",
-type: "event"
-},
-{
-inputs: [ ],
-name: "getBitcoinPriceInWei",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-inputs: [ ],
-name: "getPrice",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-inputs: [ ],
-name: "maxSupply",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-inputs: [ ],
-name: "publicSaleStart_timestampInS",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-inputs: [ ],
-name: "purchase",
-outputs: [ ],
-stateMutability: "payable",
-type: "function"
-},
-{
-inputs: [
-{
-internalType: "address",
-name: "from",
-type: "address"
-},
-{
-internalType: "address",
-name: "to",
-type: "address"
-},
-{
-internalType: "uint256",
-name: "tokenId",
-type: "uint256"
-}
-],
-name: "safeTransferFrom",
-outputs: [ ],
-stateMutability: "nonpayable",
-type: "function"
-},
-{
-inputs: [
-{
-internalType: "address",
-name: "from",
-type: "address"
-},
-{
-internalType: "address",
-name: "to",
-type: "address"
-},
-{
-internalType: "uint256",
-name: "tokenId",
-type: "uint256"
-},
-{
-internalType: "bytes",
-name: "_data",
-type: "bytes"
-}
-],
-name: "safeTransferFrom",
-outputs: [ ],
-stateMutability: "nonpayable",
-type: "function"
-},
-{
-inputs: [
-{
-internalType: "uint256",
-name: "tokenId",
-type: "uint256"
-}
-],
-name: "tokenURI",
-outputs: [
-{
-internalType: "string",
-name: "",
-type: "string"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-inputs: [ ],
-name: "totalSupply",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-}
-]
+const ERC721ADDRESS = '0x85aF596093297e169C6be6ae1DEdfbEe60Bf91d0'
+const ERC721ABI = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"inputs":[],"name":"getBitcoinPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"publicSaleStart_timestampInS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"purchase","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
 
 </script>
 
@@ -300,12 +56,17 @@ const onLoadHandler = () => {
 
   const triggerPurchase = () => {
     txLabel.innerHTML = 'Waiting for confirmation'
+
     var txHash = 0
-    Erc721Instance.methods.getPrice().call()
+    Erc721Instance.methods.getPriceInWei().call()
       .then((amount) => {
         console.log('priceWei: ', amount)
 
-        Erc721Instance.methods.purchase().send({from: walletAddress, value: (1.15 * amount)})
+        const roundAmount = parseFloat(1.2 * value).toFixed(0)
+
+        console.log('roundAmount: ', roundAmount)
+
+        Erc721Instance.methods.purchase().send({from: walletAddress, value: (roundAmount)})
           .on('transactionHash', (hash) => {
             console.log('transactionHash: ', hash)
             txHash = hash
@@ -325,8 +86,8 @@ const onLoadHandler = () => {
             txLabel.innerHTML = 'Something went wrong, try again!'
           })
       })
-      .catch((_) => {
-        console.log('getPrice failed')
+      .catch((error) => {
+        console.log('getPrice failed: ', error)
 
         txLabel.innerHTML = 'Something went wrong, try again!'
       })
@@ -334,7 +95,7 @@ const onLoadHandler = () => {
 
   const updateValues = () => {
 
-    Erc721Instance.methods.getPrice().call()
+    Erc721Instance.methods.getPriceInWei().call()
       .then((amount) => {
         buyPrice = web3.utils.fromWei(amount)
         const roundPrice = parseFloat(buyPrice).toFixed(4)
@@ -342,8 +103,8 @@ const onLoadHandler = () => {
 
         btcPriceLabel.innerHTML = roundPrice + ' ' + ethSymbol
       })
-      .catch((_) => {
-        console.log('getPrice failed')
+      .catch((error) => {
+        console.log('getPrice failed: ', error)
       })
 
     Erc721Instance.methods.maxSupply().call()
@@ -354,8 +115,8 @@ const onLoadHandler = () => {
 
         pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply)
       })
-      .catch((_) => {
-        console.log('maxSupply failed')
+      .catch((error) => {
+        console.log('maxSupply failed: ', error)
       })
 
     Erc721Instance.methods.totalSupply().call()
@@ -366,8 +127,8 @@ const onLoadHandler = () => {
 
         pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply)
       })
-      .catch((_) => {
-        console.log('totalSupply failed')
+      .catch((error) => {
+        console.log('totalSupply failed: ', err)
       })
 
     Erc721Instance.methods.getBitcoinPriceInWei().call()
@@ -378,8 +139,8 @@ const onLoadHandler = () => {
         const roundPrice2 = parseFloat(buyPrice/btcPrice).toFixed(4)
         ethPriceLabel.innerHTML = roundPrice2 + ' ' + btcSymbol
       })
-      .catch((_) => {
-        console.log('getBtcPrice failed')
+      .catch((error) => {
+        console.log('getBtcPrice failed: ', error)
       })
 
   }
