@@ -50,6 +50,7 @@ const onLoadHandler = () => {
 
   const triggerPurchase = () => {
     txLabel.innerHTML = 'Waiting for confirmation'
+    hide(buyButton)
     var txHash = 0
     Erc721Instance.methods.getPrice().call()
       .then((weiValue) => {
@@ -72,11 +73,13 @@ const onLoadHandler = () => {
               txHash + "' target='_blank'> Transaction link </a>"
 
             updateValues()
+            display(buyButton)
           })
           .on('error', (err, receipt) => {
             console.log('Transaction failed: ', err, 'br/', receipt)
 
             txLabel.innerHTML = 'Something went wrong, try again!'
+            display(buyButton)
           })
       })
       .catch((error) => {
@@ -103,9 +106,6 @@ const onLoadHandler = () => {
     Erc721Instance.methods.maxSupply().call()
       .then((amount) => {
         maxSupply = amount
-
-        console.log('maxSupply: ', amount)
-
         pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
       })
       .catch((error) => {
@@ -115,9 +115,6 @@ const onLoadHandler = () => {
     Erc721Instance.methods.totalSupply().call()
       .then((amount) => {
         totalSupply = amount
-
-        console.log('totalSupply: ', amount)
-
         pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
       })
       .catch((error) => {
@@ -146,10 +143,8 @@ const onLoadHandler = () => {
         console.log('accounts: ', accounts)
 
         if (!accounts.length) {
-          console.log('User is logged out')
           walletButton.innerHTML = "Connect Wallet"
         } else {
-          console.log('User is logged in')
           walletButton.innerHTML = "<center>Connected</center>"
           await updateBalance()
         }
@@ -192,6 +187,16 @@ const onLoadHandler = () => {
     } else {
       window.open('https://www.metamask.io')
     }
+  }
+
+  const hide = (element) => {
+    console.log("Trying to hide: ", element)
+    element.style.display = "none"
+  }
+
+  const display = (element) => {
+    console.log("Trying to show: ", element)
+    element.style.display = "block"
   }
 
   const startApp = () => {
