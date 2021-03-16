@@ -1,7 +1,8 @@
 <script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
 
 <script>
-const ERC721ADDRESS = '0x4ae57798AEF4aF99eD03818f83d2d8AcA89952c7'
+const network = 'rinkeby'
+const ERC721ADDRESS = '0x8f5AE25105C3c03Bce89aE3b5ed1E30456755fAb'
 const ERC721ABI = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"inputs":[],"name":"getBitcoinPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"publicSaleStart_timestampInS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"purchase","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
 
 </script>
@@ -29,12 +30,11 @@ const onLoadHandler = () => {
   const buyButton = document.querySelector('#buyButton')
   const contractLabel = document.querySelector('#contractLabel')
   const txLabel = document.querySelector('#txLabel')
-
   balanceLabel.innerHTML = '--' + ' ' + ethSymbol
   ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
   btcPriceLabel.innerHTML = '--' + ' ' + btcSymbol
   pizzasLabel.innerHTML = '--'
-  contractLabel.innerHTML = "Contract Address: <p> <a href='https://etherscan.io/address/" +
+  contractLabel.innerHTML = "Contract Address: <p> <a href='https://" + network + ".etherscan.io/address/" +
   ERC721ADDRESS + "' target='_blank'> " + ERC721ADDRESS + " </a>"
   txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned'
 
@@ -69,7 +69,7 @@ const onLoadHandler = () => {
             console.log('receipt: ', receipt)
 
             txLabel.innerHTML = "Transaction confirmed, enjoy your 🍕! <p> " +
-              "<a href='https://etherscan.io/tx/" +
+              "<a href='https://" + network + ".etherscan.io/tx/" +
               txHash + "' target='_blank'> Transaction link </a>"
 
             updateValues()
