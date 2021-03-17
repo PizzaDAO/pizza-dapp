@@ -1,12 +1,216 @@
 <script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
 
 <script>
+
 const ERC721ADDRESS = '0x4ae57798AEF4aF99eD03818f83d2d8AcA89952c7'
-const ERC721ABI = [{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"old","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"current","type":"uint256"}],"name":"BTCETHPriceUpdated","type":"event"},{"inputs":[],"name":"getBitcoinPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPriceInWei","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"publicSaleStart_timestampInS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"purchase","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
+const ERC721ABI = [
+{
+anonymous: false,
+inputs: [
+{
+indexed: false,
+internalType: "uint256",
+name: "old",
+type: "uint256"
+},
+{
+indexed: false,
+internalType: "uint256",
+name: "current",
+type: "uint256"
+}
+],
+name: "BTCETHPriceUpdated",
+type: "event"
+},
+{
+anonymous: false,
+inputs: [
+{
+indexed: true,
+internalType: "address",
+name: "previousOwner",
+type: "address"
+},
+{
+indexed: true,
+internalType: "address",
+name: "newOwner",
+type: "address"
+}
+],
+name: "OwnershipTransferred",
+type: "event"
+},
+{
+anonymous: false,
+inputs: [
+{
+indexed: true,
+internalType: "address",
+name: "from",
+type: "address"
+},
+{
+indexed: true,
+internalType: "address",
+name: "to",
+type: "address"
+},
+{
+indexed: true,
+internalType: "uint256",
+name: "tokenId",
+type: "uint256"
+}
+],
+name: "Transfer",
+type: "event"
+},
+{
+inputs: [
+{
+internalType: "address",
+name: "owner",
+type: "address"
+}
+],
+name: "balanceOf",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+anonymous: false,
+inputs: [
+{
+indexed: false,
+internalType: "uint256",
+name: "old",
+type: "uint256"
+},
+{
+indexed: false,
+internalType: "uint256",
+name: "current",
+type: "uint256"
+}
+],
+name: "BTCETHPriceUpdated",
+type: "event"
+},
+{
+inputs: [ ],
+name: "getBitcoinPriceInWei",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "getPrice",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "getPriceInWei",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "maxSupply",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "publicSaleStart_timestampInS",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "purchase",
+outputs: [ ],
+stateMutability: "payable",
+type: "function"
+},
+{
+inputs: [
+{
+internalType: "uint256",
+name: "tokenId",
+type: "uint256"
+}
+],
+name: "tokenURI",
+outputs: [
+{
+internalType: "string",
+name: "",
+type: "string"
+}
+],
+stateMutability: "view",
+type: "function"
+},
+{
+inputs: [ ],
+name: "totalSupply",
+outputs: [
+{
+internalType: "uint256",
+name: "",
+type: "uint256"
+}
+],
+stateMutability: "view",
+type: "function"
+}
+]
 
-</script>
-
-<script>
 const ethSymbol = 'Ξ'
 const btcSymbol = '₿'
 let maxSupply = 10000
@@ -29,14 +233,13 @@ const onLoadHandler = () => {
   const buyButton = document.querySelector('#buyButton')
   const contractLabel = document.querySelector('#contractLabel')
   const txLabel = document.querySelector('#txLabel')
-
   balanceLabel.innerHTML = '--' + ' ' + ethSymbol
   ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
   btcPriceLabel.innerHTML = '--' + ' ' + btcSymbol
   pizzasLabel.innerHTML = '--'
   contractLabel.innerHTML = "Contract Address: <p> <a href='https://etherscan.io/address/" +
   ERC721ADDRESS + "' target='_blank'> " + ERC721ADDRESS + " </a>"
-  txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned'
+  txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned on the same transaction'
 
   const promptMetamask = () => {
     window.ethereum.enable()
@@ -77,14 +280,17 @@ const onLoadHandler = () => {
           })
           .on('error', (err, receipt) => {
             console.log('Transaction failed: ', err, 'br/', receipt)
-
-            txLabel.innerHTML = 'Something went wrong, try again!'
+            if (err.code == 4001) {
+              txLabel.innerHTML = 'Transaction rejected'
+            }
+            else {
+              txLabel.innerHTML = 'Something went wrong, try again!'
+            }
             display(buyButton)
           })
       })
       .catch((error) => {
         console.log('getPrice failed: ', error)
-
         txLabel.innerHTML = 'Something went wrong, try again!'
       })
   }
@@ -95,8 +301,6 @@ const onLoadHandler = () => {
       .then((amount) => {
         buyPrice = web3.utils.fromWei(amount)
         const roundPrice = parseFloat(buyPrice).toFixed(4)
-        console.log('Price: ', roundPrice)
-
         btcPriceLabel.innerHTML = roundPrice + ' ' + ethSymbol
       })
       .catch((error) => {
@@ -139,9 +343,6 @@ const onLoadHandler = () => {
     web3.eth.getAccounts()
       .then(async (accounts) => {
         addresses = accounts
-
-        console.log('accounts: ', accounts)
-
         if (!accounts.length) {
           walletButton.innerHTML = "<center>Connect Wallet</center>"
         } else {
@@ -155,9 +356,6 @@ const onLoadHandler = () => {
 
   const updateBalance = async () => {
     walletAddress = (await web3.eth.getAccounts())[0]
-
-    console.log('Wallet address: ', walletAddress)
-
     const walletBalance = await web3.eth.getBalance(walletAddress)
     const balance = web3.utils.fromWei(walletBalance)
     const roundedBalance = parseFloat(balance).toFixed(4)
