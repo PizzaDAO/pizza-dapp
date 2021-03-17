@@ -252,47 +252,50 @@ const onLoadHandler = () => {
   }
 
   const triggerPurchase = () => {
-    txLabel.innerHTML = 'Waiting for confirmation'
-    hide(buyButton)
-    var txHash = 0
-    Erc721Instance.methods.getPrice().call()
-      .then((weiValue) => {
-        console.log('weiValue: ', weiValue)
-
-        const roundAmount = parseFloat(1.2 * weiValue).toFixed(0)
-
-        console.log('roundAmount: ', roundAmount)
-
-        Erc721Instance.methods.purchase().send({from: walletAddress, value: (roundAmount)})
-          .on('transactionHash', (hash) => {
-            console.log('transactionHash: ', hash)
-            txHash = hash
-          })
-          .on('receipt', (receipt) => {
-            console.log('receipt: ', receipt)
-
-            txLabel.innerHTML = "Transaction confirmed, enjoy your 🍕! <p> " +
-              "<a href='https://etherscan.io/tx/" +
-              txHash + "' target='_blank'> Transaction link </a>"
-
-            updateValues()
-            display(buyButton)
-          })
-          .on('error', (err, receipt) => {
-            console.log('Transaction failed: ', err, 'br/', receipt)
-            if (err.code == 4001) {
-              txLabel.innerHTML = 'Transaction rejected'
-            }
-            else {
-              txLabel.innerHTML = 'Something went wrong, try again!'
-            }
-            display(buyButton)
-          })
+  txLabel.innerHTML = 'Waiting for confirmation'
+  hide(buyButton)
+  var txHash = 0
+  var gasPrice = 145
+  var gasLimit = 200000
+  Erc721Instance.methods.getPrice().call()
+    .then((weiValue) => {
+      console.log('weiValue: ', weiValue)
+      const roundAmount = parseFloat(1.2 * weiValue).toFixed(0)
+      Erc721Instance.methods.purchase().send({
+        from: walletAddress,
+        value: (roundAmount),
+        gasPrice: web3.utils.toHex(gasPrice * 1e9),
+        gasLimit: web3.utils.toHex(gasLimit)
       })
-      .catch((error) => {
-        console.log('getPrice failed: ', error)
-        txLabel.innerHTML = 'Something went wrong, try again!'
-      })
+        .on('transactionHash', (hash) => {
+          console.log('transactionHash: ', hash)
+          txHash = hash
+        })
+        .on('receipt', (receipt) => {
+          console.log('receipt: ', receipt)
+
+          txLabel.innerHTML = "Transaction confirmed, enjoy your 🍕! <p> " +
+            "<a href='https://etherscan.io/tx/" +
+            txHash + "' target='_blank'> Transaction link </a>"
+
+          updateValues()
+          display(buyButton)
+        })
+        .on('error', (err, receipt) => {
+          console.log('Transaction failed: ', err, 'br/', receipt)
+          if (err.code == 4001) {
+            txLabel.innerHTML = 'Transaction rejected'
+          }
+          else {
+            txLabel.innerHTML = 'Something went wrong, try again!'
+          }
+          display(buyButton)
+        })
+    })
+    .catch((error) => {
+      console.log('getPrice failed: ', error)
+      txLabel.innerHTML = 'Something went wrong, try again!'
+    })
   }
 
   const updateValues = () => {
@@ -328,7 +331,6 @@ const onLoadHandler = () => {
     Erc721Instance.methods.getBitcoinPriceInWei().call()
       .then((amount) => {
         btcPrice = web3.utils.fromWei(amount)
-
         console.log('BtcPrice: ', btcPrice)
         const roundPrice2 = parseFloat(buyPrice/btcPrice).toFixed(4)
         ethPriceLabel.innerHTML = roundPrice2 + ' ' + btcSymbol
@@ -359,10 +361,7 @@ const onLoadHandler = () => {
     const walletBalance = await web3.eth.getBalance(walletAddress)
     const balance = web3.utils.fromWei(walletBalance)
     const roundedBalance = parseFloat(balance).toFixed(4)
-
     balanceLabel.innerHTML = roundedBalance + ' ' + ethSymbol
-
-    console.log('ETH balance: ', roundedBalance)
   }
 
   const buyButtonHandler = () => {
@@ -379,7 +378,6 @@ const onLoadHandler = () => {
 
   const walletButtonHandler = () => {
     console.log('Wallet button pressed')
-
     if (metamaskInstalled) {
       promptMetamask()
     } else {
@@ -388,12 +386,10 @@ const onLoadHandler = () => {
   }
 
   const hide = (element) => {
-    console.log("Trying to hide: ", element)
     element.style.display = "none"
   }
 
   const display = (element) => {
-    console.log("Trying to show: ", element)
     element.style.display = "block"
   }
 
