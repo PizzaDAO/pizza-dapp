@@ -2,7 +2,7 @@
 
 <script>
 
-const ERC721ADDRESS = '0x4ae57798AEF4aF99eD03818f83d2d8AcA89952c7'
+const ERC721ADDRESS = '0xe6b01387aa8042c13951335982e5cd3aa1255389'
 const ERC721ABI = [
 {
 anonymous: false,
@@ -29,25 +29,6 @@ inputs: [
 {
 indexed: true,
 internalType: "address",
-name: "previousOwner",
-type: "address"
-},
-{
-indexed: true,
-internalType: "address",
-name: "newOwner",
-type: "address"
-}
-],
-name: "OwnershipTransferred",
-type: "event"
-},
-{
-anonymous: false,
-inputs: [
-{
-indexed: true,
-internalType: "address",
 name: "from",
 type: "address"
 },
@@ -65,44 +46,6 @@ type: "uint256"
 }
 ],
 name: "Transfer",
-type: "event"
-},
-{
-inputs: [
-{
-internalType: "address",
-name: "owner",
-type: "address"
-}
-],
-name: "balanceOf",
-outputs: [
-{
-internalType: "uint256",
-name: "",
-type: "uint256"
-}
-],
-stateMutability: "view",
-type: "function"
-},
-{
-anonymous: false,
-inputs: [
-{
-indexed: false,
-internalType: "uint256",
-name: "old",
-type: "uint256"
-},
-{
-indexed: false,
-internalType: "uint256",
-name: "current",
-type: "uint256"
-}
-],
-name: "BTCETHPriceUpdated",
 type: "event"
 },
 {
@@ -219,6 +162,7 @@ let buyPrice = 0.0001
 let walletAddress = 0
 let addresses = 0
 let btcPrice = 30
+let ethPrice = 1800
 let metamaskInstalled = false
 let Erc721Instance
 const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -233,6 +177,7 @@ const onLoadHandler = () => {
   const buyButton = document.querySelector('#buyButton')
   const contractLabel = document.querySelector('#contractLabel')
   const txLabel = document.querySelector('#txLabel')
+  const estimateLabel = document.querySelector('#estimateLabel')
   balanceLabel.innerHTML = '--' + ' ' + ethSymbol
   ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
   btcPriceLabel.innerHTML = '--' + ' ' + btcSymbol
@@ -393,17 +338,34 @@ const onLoadHandler = () => {
     element.style.display = "block"
   }
 
-  const startApp = () => {
-    console.log('App started')
+  const getEthPrice = async () => {
+    try {
+      const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+      const result = await response.json()
+      ethPrice = result.ethereum.usd
+      console.log("result: ", ethPrice);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const startApp = async () => {
+
+    getEthPrice()
 
     Erc721Instance = new web3.eth.Contract(ERC721ABI,ERC721ADDRESS)
+    web3.eth.getBalance(ERC721ADDRESS)
+    .then((weiBalance) => {
+      var cBalance = web3.utils.fromWei(weiBalance)
+      console.log("Contract balance: ", cBalance, "ethPrice: ", ethPrice)
+      estimateLabel.innerHTML = "Incoming Pizzas: " + numberWithCommas((((cBalance * ethPrice)/2)/25).toFixed(0)) + " 🍕"
+    })
 
     Erc721Instance.events.Transfer((err, e) => { console.log(e) })
       .on('data', (e) =>{
         console.log('event: ', e)
 
         updateValues()
-        //console.log('eventTokenId: ', event['returnedValues']['tokenId']) // TO-DO: get pizza # from here
       })
       .on('changed', (i) => {
         console.log('changed: ', i)
