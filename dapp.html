@@ -1,4 +1,13 @@
-<script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
+<script type='text/javascript' src='https://unpkg.com/web3/dist/web3.min.js'></script>
+<script type='text/javascript' src='https://unpkg.com/web3modal'></script>
+<script type='text/javascript' src='https://unpkg.com/evm-chains'></script>
+<script type='text/javascript' src='https://unpkg.com/@walletconnect/web3-provider'></script>
+<script type='text/javascript' src='https://unpkg.com/fortmatic/dist/fortmatic.js'></script>
+<script type='text/javascript' src="https://cdn.jsdelivr.net/npm/@portis/web3"></script>
+<script type='text/javascript' src="https://unpkg.com/authereum@latest/authereum.js"></script>
+<script type='text/javascript' src="https://unpkg.com/@toruslabs/torus-embed"></script>
+<!-- <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/@myetherwallet/mewconnect-web-client@2.1.23-beta.8/dist/index.js"></script>
+<script src="https://unpkg.com/eth-provider@0.6.1/browser.min.js"></script> -->
 
 <script>
   const NETWORK = ''
@@ -160,8 +169,7 @@
     ADDRESS: ERC721_ADDRESS,
     MULTISIG: MULTISIG_ADDRESS,
   }
-</script>
-<script>
+
   const { rarePizzasBox } = window
   const ethSymbol = 'Ξ'
   const btcSymbol = '₿'
@@ -179,6 +187,25 @@
   const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
+
+  // Unpkg imports
+  const Web3Modal = window.Web3Modal.default;
+  const WalletConnectProvider = window.WalletConnectProvider.default;
+  const Fortmatic = window.Fortmatic;
+  const evmChains = window.evmChains;
+
+  // Web3modal instance
+  let web3Modal
+
+  // Chosen wallet provider given by the dialog window
+  let provider;
+
+
+  // Address of the selected account
+  let selectedAccount;
+
+  let web3
+
   const onLoadHandler = () => {
     const { ADDRESS: CONTRACT_ADDRESS } = rarePizzasBox
     const walletButton = document.querySelector('#walletButton')
@@ -190,6 +217,7 @@
     const contractLabel = document.querySelector('#contractLabel')
     const txLabel = document.querySelector('#txLabel')
     const estimateLabel = document.querySelector('#estimateLabel')
+    const errorLabel = document.querySelector('#errorLabel')
 
     balanceLabel.innerHTML = '--' + ' ' + ethSymbol
     ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
@@ -198,15 +226,28 @@
     contractLabel.innerHTML = `Contract Address: <p> <a href='https://${NETWORK}etherscan.io/address/${CONTRACT_ADDRESS}' target='_blank'>${CONTRACT_ADDRESS}</a> </p>`
     txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned on the same transaction'
 
-    const promptMetamask = () => {
-      window.ethereum.enable()
-        .then(async () => {
-          walletButton.innerHTML = '<center>Connected</center>'
+    const promptMetamask = async () => {
+      // window.ethereum.enable()
+      //   .then(async () => {
+      //     walletButton.innerHTML = '<center>Connected</center>'
+      //
+      //     await updateBalance()
+      //   }).catch((err) => {
+      //     console.log(err)
+      //   })
 
-          await updateBalance()
-        }).catch((err) => {
-          console.log(err)
-        })
+        console.log("Opening a dialog", web3Modal);
+        try {
+          provider = await web3Modal.connect();
+          walletButton.innerHTML = '<center>Connected</center>'
+          startApp()
+          //await updateBalance()
+        } catch(e) {
+          console.log("Could not get a wallet connection", e);
+          errorLabel.innerHTML = 'web3Modal.connect error' + e
+          return;
+        }
+
     }
 
     const triggerPurchase = () => {
@@ -322,7 +363,6 @@
             walletButton.innerHTML = '<center>Connect Wallet</center>'
           } else {
             walletButton.innerHTML = '<center>Connected</center>'
-
             await updateBalance()
           }
         }).catch((err) => {
@@ -360,11 +400,11 @@
     const walletButtonHandler = () => {
       console.log('Wallet button pressed')
 
-      if (metamaskInstalled) {
+      //if (metamaskInstalled) {
         promptMetamask()
-      } else {
-        window.open('https://www.metamask.io')
-      }
+      // } else {
+      //   window.open('https://www.metamask.io')
+      // }
     }
 
     const hide = (element) => {
@@ -397,13 +437,33 @@
               console.log('Contract balance: ', cBalance)
               console.log('MS balance: ', msBalance)
               console.log('Sum: ', sumBalance)
-              estimateLabel.innerHTML = 'Approx. Real Pizzas for Party: ' + numberWithCommas((((sumBalance * ethPrice)/2)/25).toFixed(0)) + ' 🍕'
+              estimateLabel.innerHTML = 'Real Pizza Slices for Party: ' + numberWithCommas(((((sumBalance * ethPrice)/2)/25)*8).toFixed(0)) + ' 🍕'
           })
         })
     }
 
     const startApp = async () => {
+      web3 = new Web3(provider);
       getPizzaBalance()
+
+      // Subscribe to accounts change
+      provider.on("accountsChanged", (accounts) => {
+        updateValues()
+        handleUser()
+      });
+
+      // Subscribe to chainId change
+      provider.on("chainChanged", (chainId) => {
+        updateValues()
+        handleUser()
+      });
+
+      // Subscribe to networkId change
+      provider.on("networkChanged", (networkId) => {
+        updateValues()
+        handleUser()
+      });
+
       Erc721Instance = new web3.eth.Contract(rarePizzasBox.ABI, rarePizzasBox.ADDRESS)
 
       Erc721Instance.events.Transfer((err, e) => { console.log(e) })
@@ -421,33 +481,114 @@
     }
 
     const initWeb3 = () => {
-      if (window.ethereum) {
-        console.log('Window.ethereum exists')
+      // if (window.ethereum) {
+      //   console.log('Window.ethereum exists')
+      //
+      //   metamaskInstalled = true
+      //   window.web3 = new Web3(window.ethereum)
+      //
+      //   startApp()
+      // } else if (window.web3) {
+      //   console.log('Window.web3 exists')
+      //
+      //   metamaskInstalled = true
+      //   window.web3 = new Web3(window.web3.currentProvider)
+      //
+      //   startApp()
+      // } else if (isMobile) {
+      //   console.log('Mobile initiated')
+      //
+      //   metamaskInstalled = true
+      //   startApp()
+      // } else {
+      //   console.log('Non-ethereum browser detected')
+      //
+      //   window.alert('Browser not compatible. Try Chrome and MetaMask!')
+      //
+      //   txLabel.innerHTML = 'Try Chrome and MetaMask!'
+      //   metamaskInstalled = false
+      // }
 
-        metamaskInstalled = true
-        window.web3 = new Web3(window.ethereum)
+      console.log("Initializing example");
+      console.log("WalletConnectProvider is", WalletConnectProvider);
+      console.log("Fortmatic is", Fortmatic);
+      console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
 
-        startApp()
-      } else if (window.web3) {
-        console.log('Window.web3 exists')
-
-        metamaskInstalled = true
-        window.web3 = new Web3(window.web3.currentProvider)
-
-        startApp()
-      } else if (isMobile) {
-        console.log('Mobile initiated')
-
-        metamaskInstalled = true
-        startApp()
-      } else {
-        console.log('Non-ethereum browser detected')
-
-        window.alert('Browser not compatible. Try Chrome and MetaMask!')
-
-        txLabel.innerHTML = 'Try Chrome and MetaMask!'
-        metamaskInstalled = false
+      // Check that the web page is run in a secure context,
+      // as otherwise MetaMask won't be available
+      if(location.protocol !== 'https:') {
+        // https://ethereum.stackexchange.com/a/62217/620
+        window.alert('Use https!')
+          // TO-DO: Disable connect/buy button
+        // const alert = document.querySelector("#alert-error-https");
+        // alert.style.display = "block";
+        // document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
+        return;
       }
+
+      // Tell Web3modal what providers we have available.
+      // Built-in web browser provider (only one can exist as a time)
+      // like MetaMask, Brave or Opera is added automatically by Web3modal
+      const providerOptions = {
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: {
+            infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
+          }
+        },
+
+        fortmatic: {
+          package: Fortmatic,
+          options: {
+            key: "pk_test_391E26A3B43A3350"
+          }
+        },
+
+        portis: {
+          package: Portis, // required
+          options: {
+            id: "2e2f473c-69d4-4c15-bc0b-63b81124630c" // required
+          }
+        },
+
+        authereum: {
+          package: Authereum // required
+        },
+
+        torus: {
+          package: Torus, // required
+          // options: {
+          //   networkParams: {
+          //     host: "https://localhost:8545", // optional
+          //     chainId: 1337, // optional
+          //     networkId: 1337 // optional
+          //   },
+          //   config: {
+          //     buildEnv: "development" // optional
+          //   }
+          //}
+        }
+
+        // mewconnect: {
+        //   package: MewConnect, // required
+        //   options: {
+        //     infuraId: "8043bb2cf99347b1bfadfb233c5325c0" // required
+        //   }
+        // },
+        //
+        // frame: {
+        //   package: ethProvider // required
+        // }
+
+      };
+
+      web3Modal = new Web3Modal({
+        cacheProvider: false, // optional
+        providerOptions, // required
+        disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
+      });
+
+      console.log("Web3Modal instance is", web3Modal);
     }
 
     initWeb3()
