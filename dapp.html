@@ -180,7 +180,7 @@
   let walletAddress = 0
   let addresses = 0
   let btcPrice = 30
-  let ethPrice = 1800
+  let ethPrice = 4100
   let metamaskInstalled = false
   let Erc721Instance
 
@@ -229,24 +229,40 @@
     const promptMetamask = async () => {
       // window.ethereum.enable()
       //   .then(async () => {
-      //     walletButton.innerHTML = '<center>Connected</center>'
+      //     walletButton.innerHTML = '<center>Disconnect</center>'
       //
       //     await updateBalance()
       //   }).catch((err) => {
       //     console.log(err)
       //   })
 
+      if (walletAddress == 0) {
         console.log("Opening a dialog", web3Modal);
         try {
           provider = await web3Modal.connect();
-          walletButton.innerHTML = '<center>Connected</center>'
+          walletButton.innerHTML = '<center>Disconnect</center>'
           startApp()
           //await updateBalance()
         } catch(e) {
           console.log("Could not get a wallet connection", e);
-          errorLabel.innerHTML = 'web3Modal.connect error' + e
+          errorLabel.innerHTML = 'Wallet connection cancelled by user'
           return;
         }
+      }
+      else {
+        console.log("Logging user out")
+
+          // If the cached provider is not cleared,
+          // WalletConnect will default to the existing session
+          // and does not allow to re-scan the QR code with a new wallet.
+          // Depending on your use case you may want or want not his behavir.
+          await web3Modal.clearCachedProvider();
+          console.log("clear cached")
+          provider = null;
+          walletAddress = 0
+          balanceLabel.innerHTML = '-- ' + ethSymbol
+          walletButton.innerHTML = "Connect Wallet"
+      }
 
     }
 
@@ -303,12 +319,12 @@
         })
     }
 
-    const updateValues = () => {
+    const updateValues = async () => {
       getPizzaBalance()
 
       Erc721Instance.methods.getPrice().call()
         .then((amount) => {
-          buyPrice = web3.utils.fromWei(amount)
+          buyPrice = web3.utils.fromWei(amount, "ether")
 
           const roundPrice = parseFloat(buyPrice).toFixed(4)
 
@@ -340,7 +356,7 @@
 
       Erc721Instance.methods.getBitcoinPriceInWei().call()
         .then((amount) => {
-          btcPrice = web3.utils.fromWei(amount)
+          btcPrice = web3.utils.fromWei(amount, "ether")
 
           console.log('BtcPrice: ', btcPrice)
 
@@ -362,7 +378,7 @@
           if (!accounts.length) {
             walletButton.innerHTML = '<center>Connect Wallet</center>'
           } else {
-            walletButton.innerHTML = '<center>Connected</center>'
+            walletButton.innerHTML = '<center>Disconnect</center>'
             await updateBalance()
           }
         }).catch((err) => {
