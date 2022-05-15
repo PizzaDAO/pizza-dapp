@@ -1,4 +1,3 @@
-<script>
   const NETWORK = ''
   const MULTISIG_ADDRESS = '0xBA5E28a2D1C8cF67Ac9E0dfc850DC8b7b21A4DE2'
   const ERC721_ADDRESS = '0x4ae57798AEF4aF99eD03818f83d2d8AcA89952c7'
@@ -402,4 +401,3 @@
   }
 
   window.addEventListener('load', onLoadHandler, { once: true })
-</script>
