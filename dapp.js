@@ -1493,13 +1493,13 @@
     const walletButtonHandler = () => {
       console.log('Wallet button pressed')
 
-      PizzaInstance.methods.isRedeemed(19).call()
-        .then((value) => {
-          console.log('isRedeemed: ', value)
-        })
-        .catch((error) => {
-          console.log('isRedeemed failed: ', error)
-        })
+      // PizzaInstance.methods.isRedeemed(19).call()
+      //   .then((value) => {
+      //     console.log('isRedeemed: ', value)
+      //   })
+      //   .catch((error) => {
+      //     console.log('isRedeemed failed: ', error)
+      //   })
 
         console.log("checkingMetamask")
 
