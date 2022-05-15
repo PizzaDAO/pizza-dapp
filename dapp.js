@@ -1530,7 +1530,7 @@
 
     const startApp = async () => {
       BoxInstance = new web3.eth.Contract(BOX_ABI, BOX_ADDRESS)
-      PizzaInstance = new web3.eth.Contract(PIZZA_ABI, PIZZAADDRESS)
+      PizzaInstance = new web3.eth.Contract(PIZZA_ABI, PIZZA_ADDRESS)
 
       BoxInstance.events.Transfer((err, e) => { console.log(e) })
         .on('data', (e) =>{
