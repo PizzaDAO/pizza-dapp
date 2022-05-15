@@ -159,6 +159,8 @@
     ABI: ERC721_ABI,
     ADDRESS: ERC721_ADDRESS,
     MULTISIG: MULTISIG_ADDRESS,
+    PIZZAADDRESS: PIZZA_ADDRESS,
+    PIZZAABI: PIZZA_ABI,
   }
 
   const { rarePizzasBox } = window
@@ -310,15 +312,16 @@
     const walletButtonHandler = () => {
       console.log('Wallet button pressed')
 
-      PizzaInstance.methods.isRedeemed(19).call()
-        .then((value) => {
-          console.log('isRedeemed: ', value)
-        })
-        .catch((error) => {
-          console.log('isRedeemed failed: ', error)
-        })
+      PizzaInstance.methods.isRedeemed(19).call( function(error, result){
+          if (result) {
+            console.log('isRedeemed: ', result)
+          } else {
+            console.log('isRedeemed failed: ', error)
 
-        console.log("checkingMetamask")
+          }
+      });
+
+      console.log("checkingMetamask")
 
       if (metamaskInstalled) {
         promptMetamask()
@@ -348,7 +351,7 @@
     const startApp = async () => {
       Erc721Instance = new web3.eth.Contract(rarePizzasBox.ABI, rarePizzasBox.ADDRESS)
 
-      PizzaInstance = new web3.eth.Contract(PIZZA_ABI, PIZZA_ADDRESS)
+      PizzaInstance = new web3.eth.Contract(rarePizzasBox.PIZZAABI, rarePizzasBox.PIZZAADDRESS)
 
       Erc721Instance.events.Transfer((err, e) => { console.log(e) })
         .on('data', (e) =>{
