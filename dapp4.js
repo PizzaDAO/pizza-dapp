@@ -170,11 +170,15 @@
         .then((weiValue) => {
           console.log('weiValue: ', weiValue)
 
+
           const roundAmount = parseFloat(weiValue).toFixed(0)
 
           let addressIndex = WHITELIST.indexOf(walletAddress)
 
-          if (addressIndex == -1) {
+          console.log("walletAddress: ", walletAddress)
+          console.log("addressIndex: ", addressIndex)
+
+          if (addressIndex === -1) {
             console.log("Not on whitelist")
           } else {
             console.log("Generating proof")
