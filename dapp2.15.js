@@ -267,7 +267,9 @@
         console.log("Not on whitelist")
       } else {
         console.log("Generating proof")
-        let proof = createPrePurchaseProof(addressIndex)
+        //let proof = createPrePurchaseProof(addressIndex)
+        let proof = generatePresaleProof(WHITELIST)
+
         console.log("proof: ", proof)
         console.log("Trying to buy box - presale")
         BoxInstance.methods.prePurchase(proof).send({
@@ -318,56 +320,56 @@
           console.log('box totalNewPurchases failed: ', error)
         })
 
-      // Check number of boxes
-      BoxInstance.methods.balanceOf(walletAddress).call()
-        .then((balance) => {
-          pizzasToRedeem = 0
-          for (let i = 0; i < balance; i++) {
-
-            // Check address owned ids
-            BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, i).call()
-              .then((boxId) => {
-                console.log("Owner of boxId: ", boxId)
-
-                // Check if it was redeemed
-                PizzaInstance.methods.isRedeemed(boxIdField.value).call()
-                  .then((value) => {
-                    console.log('isRedeemed: ', value)
-                    if (value) {
-                      console.log("Box already opened: ", boxId)
-                      boxCheckLabel.innerHTML = 'Box was already opened!'
-                    } else {
-                      console.log("Box still closed: ", boxId)
-                      boxCheckLabel.innerHTML = 'Box is still closed!'
-                      // Add option to bake pie selector
-                      var opt = document.createElement('option');
-                      opt.value = i;
-                      opt.innerHTML = i;
-                      selectBox.appendChild(opt)
-                      pizzasToRedeem++
-                    }
-                  })
-                  .catch((error) => {
-                    boxCheckLabel.innerHTML = 'Error: ' + error
-                    console.log('isRedeemed failed: ', error)
-                  })
-              })
-              .catch((error) => {
-                console.log('Failed to get boxId for index: ', i, ' with error: ', error)
-              })
-          }
-        })
-        .catch((error) => {
-          console.log('box totalNewPurchases failed: ', error)
-        })
-
-      PizzaInstance.methods.balanceOf(walletAddress).call()
-        .then((balance) => {
-          console.log(walletAddress, " owns ", balance, "pizzas")
-        })
-        .catch((error) => {
-          console.log('pizza balanceOf failed: ', error)
-        })
+      // // Check number of boxes
+      // BoxInstance.methods.balanceOf(walletAddress).call()
+      //   .then((balance) => {
+      //     pizzasToRedeem = 0
+      //     for (let i = 0; i < balance; i++) {
+      //
+      //       // Check address owned ids
+      //       BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, i).call()
+      //         .then((boxId) => {
+      //           console.log("Owner of boxId: ", boxId)
+      //
+      //           // Check if it was redeemed
+      //           PizzaInstance.methods.isRedeemed(boxIdField.value).call()
+      //             .then((value) => {
+      //               console.log('isRedeemed: ', value)
+      //               if (value) {
+      //                 console.log("Box already opened: ", boxId)
+      //                 boxCheckLabel.innerHTML = 'Box was already opened!'
+      //               } else {
+      //                 console.log("Box still closed: ", boxId)
+      //                 boxCheckLabel.innerHTML = 'Box is still closed!'
+      //                 // Add option to bake pie selector
+      //                 var opt = document.createElement('option');
+      //                 opt.value = i;
+      //                 opt.innerHTML = i;
+      //                 selectBox.appendChild(opt)
+      //                 pizzasToRedeem++
+      //               }
+      //             })
+      //             .catch((error) => {
+      //               boxCheckLabel.innerHTML = 'Error: ' + error
+      //               console.log('isRedeemed failed: ', error)
+      //             })
+      //         })
+      //         .catch((error) => {
+      //           console.log('Failed to get boxId for index: ', i, ' with error: ', error)
+      //         })
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log('box totalNewPurchases failed: ', error)
+      //   })
+      //
+      // PizzaInstance.methods.balanceOf(walletAddress).call()
+      //   .then((balance) => {
+      //     console.log(walletAddress, " owns ", balance, "pizzas")
+      //   })
+      //   .catch((error) => {
+      //     console.log('pizza balanceOf failed: ', error)
+      //   })
 
     }
 
@@ -553,20 +555,20 @@
      return proof
     }
 
-    // const generatePresaleProof = (claimList) => {
-    //   const leaves = []
-    //   const data = []
-    //
-    //   claimList.forEach((item) => {
-    //     if (!data.includes(item.address.toLowerCase())) {
-    //       data.push(item.address.toLowerCase())
-    //
-    //       leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
-    //     }
-    //   })
-    //   const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
-    //   return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
-    // }
+    const generatePresaleProof = (claimList) => {
+      const leaves = []
+      const data = []
+
+      claimList.forEach((item) => {
+        if (!data.includes(item.address.toLowerCase())) {
+          data.push(item.address.toLowerCase())
+
+          leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
+        }
+      })
+      const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+      return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
+    }
 
     const startApp = async () => {
       BoxInstance = new web3.eth.Contract(BOX_ABI, BOX_ADDRESS)
