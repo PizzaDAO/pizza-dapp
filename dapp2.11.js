@@ -1,4 +1,3 @@
-  let keccak256 = require('keccak256')
   const NETWORK = 'ropsten'
   const MULTISIG_ADDRESS = '0xBA5E28a2D1C8cF67Ac9E0dfc850DC8b7b21A4DE2'
   const BOX_ADDRESS = '0x49700447bd9ea896f2f999c1bf20eb630d2c65e4'
@@ -353,6 +352,8 @@
      proof = proof.map((item) => '0x' + item.data.toString('hex'));
      return proof
     }
+    console.log("keccak256:" , keccak256)
+    console.log("keccak256():" , keccak256())
 
     const startApp = async () => {
       BoxInstance = new web3.eth.Contract(BOX_ABI, BOX_ADDRESS)
