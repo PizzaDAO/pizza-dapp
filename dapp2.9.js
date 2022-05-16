@@ -188,7 +188,6 @@
             }
             display(buyButton)
           })
-
       }
 
     }
@@ -301,7 +300,7 @@
       }
     }
 
-    const createPrePurchaseProof = async(indexOfUser) => {
+    const createPrePurchaseProof = (indexOfUser) => {
      const claimListHashes = WHITELIST.map((x) =>
          web3.utils.soliditySha3( x.toLowerCase())
      );
