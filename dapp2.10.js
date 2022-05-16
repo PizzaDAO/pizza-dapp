@@ -1,3 +1,4 @@
+  let keccak256 = require('keccak256')
   const NETWORK = 'ropsten'
   const MULTISIG_ADDRESS = '0xBA5E28a2D1C8cF67Ac9E0dfc850DC8b7b21A4DE2'
   const BOX_ADDRESS = '0x49700447bd9ea896f2f999c1bf20eb630d2c65e4'
@@ -129,6 +130,7 @@
     const selectBox = document.querySelector('#selectBox')
     const selectRecipe = document.querySelector('#selectRecipe')
     const bakePie = document.querySelector('#bakePie')
+    const testPurchase = document.querySelector('#testPurchase')
     //const contractLabel = document.querySelector('#contractLabel')
     //contractLabel.innerHTML = `Contract Address: <p> <a href='https://${NETWORK}etherscan.io/address/${BOX_ADDRESS}' target='_blank'>${BOX_ADDRESS}</a> </p>`
 
@@ -159,7 +161,7 @@
         console.log("Generating proof")
         let proof = createPrePurchaseProof(addressIndex)
         console.log("proof: ", proof)
-        console.log("Trying to buy box")
+        console.log("Trying to buy box - presale")
         BoxInstance.methods.prePurchase(proof).send({
           from: walletAddress,
           value: priceInWei
@@ -244,6 +246,48 @@
         triggerPurchase()
       }
     }
+
+    const testPurchaseHandler = () => {
+      console.log('Buy button pressed')
+
+      handleUser()
+
+      if (!addresses.length) {
+        console.log("prompting metamask")
+        promptMetamask()
+      } else {
+        console.log("Trying to purchase")
+        BoxInstance.methods.purchase().send({
+          from: walletAddress,
+          value: priceInWei
+        })
+          .on('transactionHash', (hash) => {
+            console.log('transactionHash: ', hash)
+
+            txHash = hash
+          })
+          .on('receipt', (receipt) => {
+            console.log('receipt: ', receipt)
+
+            txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
+
+            updateValues()
+            display(buyButton)
+          })
+          .on('error', (err, receipt) => {
+            console.log('Transaction failed: ', err, 'br/', receipt)
+
+            if (err.code === 4001) {
+              txLabel.innerHTML = 'Transaction rejected'
+            } else {
+              txLabel.innerHTML = 'Something went wrong, try again!'
+            }
+            display(buyButton)
+          })
+      }
+    }
+
 
     const checkButtonHandler = () => {
       console.log('Check button pressed')
@@ -363,6 +407,7 @@
     walletButton.addEventListener('click', walletButtonHandler)
     buyButton.addEventListener('click', buyButtonHandler)
     checkButton.addEventListener('click', checkButtonHandler)
+    checkButton.addEventListener('click', testPurchaseHandler)
   }
 
   window.addEventListener('load', onLoadHandler, { once: true })
