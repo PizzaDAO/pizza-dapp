@@ -129,7 +129,6 @@
     const selectBox = document.querySelector('#selectBox')
     const selectRecipe = document.querySelector('#selectRecipe')
     const bakePie = document.querySelector('#bakePie')
-    const testPurchase = document.querySelector('#testPurchase')
     //const contractLabel = document.querySelector('#contractLabel')
     //contractLabel.innerHTML = `Contract Address: <p> <a href='https://${NETWORK}etherscan.io/address/${BOX_ADDRESS}' target='_blank'>${BOX_ADDRESS}</a> </p>`
 
@@ -246,8 +245,10 @@
       }
     }
 
-    const testPurchaseHandler = () => {
-      console.log('Buy button pressed')
+    const bakePieHandler = () => {
+      console.log('Bake pie button pressed')
+
+      console.log('Trying to call purchase')
 
       handleUser()
 
@@ -286,7 +287,6 @@
           })
       }
     }
-
 
     const checkButtonHandler = () => {
       console.log('Check button pressed')
@@ -347,7 +347,7 @@
      const claimListHashes = WHITELIST.map((x) =>
          web3.utils.soliditySha3( x.toLowerCase())
      );
-     const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256, { sort: true });
+     const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256(), { sort: true });
      let proof = claimListMerkleTree.getProof(claimListHashes[indexOfUser]);
      proof = proof.map((item) => '0x' + item.data.toString('hex'));
      return proof
@@ -408,7 +408,7 @@
     walletButton.addEventListener('click', walletButtonHandler)
     buyButton.addEventListener('click', buyButtonHandler)
     checkButton.addEventListener('click', checkButtonHandler)
-    checkButton.addEventListener('click', testPurchaseHandler)
+    bakePie.addEventListener('click', bakePieHandler)
   }
 
   window.addEventListener('load', onLoadHandler, { once: true })
