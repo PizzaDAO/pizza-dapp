@@ -267,7 +267,7 @@
         console.log("Not on whitelist")
       } else {
         console.log("Generating proof")
-        let proof = generatePresaleProof(WHITELIST)
+        let proof = createPrePurchaseProof(addressIndex)
         console.log("proof: ", proof)
         console.log("Trying to buy box - presale")
         BoxInstance.methods.prePurchase(proof).send({
@@ -553,20 +553,20 @@
      return proof
     }
 
-    const generatePresaleProof = (claimList) => {
-      const leaves = []
-      const data = []
-
-      claimList.forEach((item) => {
-        if (!data.includes(item.address.toLowerCase())) {
-          data.push(item.address.toLowerCase())
-
-          leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
-        }
-      })
-      const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
-      return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
-    }
+    // const generatePresaleProof = (claimList) => {
+    //   const leaves = []
+    //   const data = []
+    //
+    //   claimList.forEach((item) => {
+    //     if (!data.includes(item.address.toLowerCase())) {
+    //       data.push(item.address.toLowerCase())
+    //
+    //       leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
+    //     }
+    //   })
+    //   const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+    //   return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
+    // }
 
     const startApp = async () => {
       BoxInstance = new web3.eth.Contract(BOX_ABI, BOX_ADDRESS)
