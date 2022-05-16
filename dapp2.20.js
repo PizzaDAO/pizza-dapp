@@ -2579,7 +2579,7 @@
       hide(buyButton)
 
       let txHash = 0
-      //let addressIndex = WHITELIST.indexOf(walletAddress)
+      let addressIndex = WHITELIST.indexOf(walletAddress)
 
       console.log("walletAddress: ", walletAddress)
       console.log("addressIndex: ", addressIndex)
