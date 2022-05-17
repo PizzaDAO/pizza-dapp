@@ -2857,7 +2857,7 @@
     const handleUser = () => {
       console.log("handling user")
 
-      web3.eth.getAccounts()
+      await web3.eth.getAccounts()
         .then(async (accounts) => {
           addresses = accounts
 
