@@ -3050,7 +3050,7 @@
       // Trying to follow Rhiz's frontend example:
       // https://github.com/PizzaDAO/pizza-dapp/blob/a0c6a8dd7aafd9e01b5bf3f54635715e2fc5ef70/dapp.html#L1378
      const claimListHashes = WHITELIST.map((item) =>
-         web3.utils.soliditySha3(item.toLowerCase())
+         web3.utils.soliditySha3(item.address.toLowerCase())
      );
      const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256.keccak256, { sort: true });
      let proof = claimListMerkleTree.getProof(claimListHashes[indexOfUser]);
