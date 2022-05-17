@@ -578,7 +578,7 @@
 
     const proofmtjs = (claimList) => {
       // Trying to follow official example from https://www.npmjs.com/package/merkletreejs
-      const leaves = (claimList).map(x => ethers.utils.solidityKeccak256(x.address.toLowerCase()))
+      const leaves = (claimList).map(x => ethers.utils.solidityKeccak256(x.toLowerCase()))
       const tree = new MerkleTree(leaves, keccak256)
       const leaf = ethers.utils.solidityKeccak256(walletAddress.toLowerCase())
       const proof = tree.getProof(leaf)
