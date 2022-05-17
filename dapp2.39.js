@@ -2821,7 +2821,8 @@
               // Check address owned ids
               console.log("Trying tokenOfOwnerByIndex for wallet: ", walletAddress)
               console.log("and tokenIndex: ", i)
-              BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, i).call()
+
+              BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(i)).call()
                 .then((boxId) => {
                   console.log("Owner of boxId: ", boxId)
 
@@ -2944,7 +2945,7 @@
 
     const bakePieHandler = async () => {
       console.log('Bake pie button pressed')
-
+        console.log("pizzasToRedeem: ", pizzasToRedeem)
       if (pizzasToRedeem > 0) {
 
         await handleUser()
