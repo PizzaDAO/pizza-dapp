@@ -3146,8 +3146,8 @@
     });
 
      // detect network change
-    window.ethereum.on('networkChanged', function(networkId){
-      console.log('networkChanged',networkId);
+    window.ethereum.on('chainChanged', function(chainId){
+      console.log('chainChanged',chainId);
     });
 
   }
