@@ -2854,7 +2854,7 @@
 
     }
 
-    const handleUser = () => {
+    const handleUser = async () => {
       console.log("handling user")
 
       await web3.eth.getAccounts()
@@ -2876,7 +2876,7 @@
     const buyButtonHandler = () => {
       console.log('Buy button pressed')
 
-      handleUser()
+      await handleUser()
 
       if (!addresses.length) {
         console.log("prompting metamask")
@@ -2890,7 +2890,7 @@
     const testPurchaseHandler = () => {
       console.log('Testing purchase')
 
-      handleUser()
+      await handleUser()
 
       if (!addresses.length) {
         console.log("prompting metamask")
@@ -2933,7 +2933,7 @@
 
       if (pizzasToRedeem > 0) {
 
-        handleUser()
+        await handleUser()
 
         if (!addresses.length) {
           console.log("prompting metamask")
@@ -3083,7 +3083,7 @@
         })
         .on('error on Transfer', console.error)
 
-      handleUser()
+      await handleUser()
       updateValues()
     }
 
