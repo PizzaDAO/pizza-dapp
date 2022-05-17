@@ -2873,7 +2873,7 @@
         })
     }
 
-    const buyButtonHandler = () => {
+    const buyButtonHandler = async () => {
       console.log('Buy button pressed')
 
       await handleUser()
@@ -2887,7 +2887,7 @@
       }
     }
 
-    const testPurchaseHandler = () => {
+    const testPurchaseHandler = async () => {
       console.log('Testing purchase')
 
       await handleUser()
@@ -2928,7 +2928,7 @@
       }
     }
 
-    const bakePieHandler = () => {
+    const bakePieHandler = async () => {
       console.log('Bake pie button pressed')
 
       if (pizzasToRedeem > 0) {
