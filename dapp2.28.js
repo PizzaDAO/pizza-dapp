@@ -2799,13 +2799,14 @@
       //   })
 
       // Check number of boxes
-      BoxInstance.methods.balanceOf(walletAddress).call()
+      console.log("walletAddress: ", walletAddress)
+      BoxInstance.methods.balanceOf(walletAddress.address).call()
         .then((balance) => {
           pizzasToRedeem = 0
           for (let i = 0; i < balance; i++) {
 
             // Check address owned ids
-            BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, i).call()
+            BoxInstance.methods.tokenOfOwnerByIndex(walletAddress.address, i).call()
               .then((boxId) => {
                 console.log("Owner of boxId: ", boxId)
 
@@ -2840,7 +2841,7 @@
         .catch((error) => {
           console.log('box totalNewPurchases failed: ', error)
         })
-      
+
       PizzaInstance.methods.balanceOf(walletAddress).call()
         .then((balance) => {
           console.log(walletAddress, " owns ", balance, "pizzas")
