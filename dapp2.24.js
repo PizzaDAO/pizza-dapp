@@ -2873,7 +2873,7 @@
      const claimListHashes = WHITELIST.map((item) =>
          web3.utils.soliditySha3(item.toLowerCase())
      );
-     const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256, { sort: true });
+     const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256.keccak256, { sort: true });
      let proof = claimListMerkleTree.getProof(claimListHashes[indexOfUser]);
      proof = proof.map((item) => '0x' + item.data.toString('hex'));
      return proof
