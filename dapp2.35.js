@@ -2781,11 +2781,39 @@
 
     const updateValues = () => {
 
+      // Checking total supplies
+      BoxInstance.methods.totalSupply().call()
+        .then((amount) => {
+          console.log("BoxInstance.totalSupply: ", amount)
+          boxesLabel.innerHTML = numberWithCommas(10000 - 824 - amount)
+        })
+        .catch((error) => {
+          console.log('box totalSupply failed: ', error)
+        })
+
+      PizzaInstance.methods.totalSupply().call()
+        .then((amount) => {
+          console.log("PizzaInstance.totalSupply: ", amount)
+          pizzasLabel.innerHTML = numberWithCommas(amount)
+        })
+        .catch((error) => {
+          console.log('pizza totalSupply failed: ', error)
+        })
+
+      // BoxInstance.methods.totalNewPurchases().call()
+      //   .then((amount) => {
+      //     boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
+      //   })
+      //   .catch((error) => {
+      //     console.log('box totalNewPurchases failed: ', error)
+      //   })
+
       if (walletAddress != 0) {
         // Check number of boxes
         console.log("walletAddress: ", walletAddress)
         BoxInstance.methods.balanceOf(walletAddress).call()
           .then((balance) => {
+            console.log(walletAddress, " owns ", balance, "boxes")
             pizzasToRedeem = 0
             for (let i = 0; i < balance; i++) {
 
@@ -2834,23 +2862,6 @@
             console.log('pizza balanceOf failed: ', error)
           })
       }
-
-      BoxInstance.methods.totalSupply().call()
-        .then((amount) => {
-          console.log("BoxInstance.totalSupply: ", amount)
-          boxesLabel.innerHTML = numberWithCommas(10000 - 824 - amount)
-        })
-        .catch((error) => {
-          console.log('box totalSupply failed: ', error)
-        })
-
-      // BoxInstance.methods.totalNewPurchases().call()
-      //   .then((amount) => {
-      //     boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
-      //   })
-      //   .catch((error) => {
-      //     console.log('box totalNewPurchases failed: ', error)
-      //   })
 
     }
 
