@@ -2979,19 +2979,24 @@
         promptMetamask()
       } else {
         console.log("checking redeemed: ", boxIdField.value)
-        PizzaInstance.methods.isRedeemed(boxIdField.value).call()
-          .then((value) => {
-            console.log('isRedeemed: ', value)
-            if (value) {
-              boxCheckLabel.innerHTML = 'Box was already opened!'
-            } else {
-              boxCheckLabel.innerHTML = 'Box is still closed!'
-            }
-          })
-          .catch((error) => {
-            boxCheckLabel.innerHTML = 'Error: ' + error
-            console.log('isRedeemed failed: ', error)
-          })
+        if (boxIdField.value < 0 || boxIdField.value > 9999) {
+          boxCheckLabel.innerHTML = 'Box does not exist!'
+        }
+        else {
+          PizzaInstance.methods.isRedeemed(boxIdField.value).call()
+            .then((value) => {
+              console.log('isRedeemed: ', value)
+              if (value) {
+                boxCheckLabel.innerHTML = 'Box was already opened!'
+              } else {
+                boxCheckLabel.innerHTML = 'Box is still closed!'
+              }
+            })
+            .catch((error) => {
+              boxCheckLabel.innerHTML = 'Error: ' + error
+              console.log('isRedeemed failed: ', error)
+            })
+        }
       }
     }
 
@@ -3078,8 +3083,8 @@
         })
         .on('error on Transfer', console.error)
 
-      updateValues()
       handleUser()
+      updateValues()
     }
 
     const initWeb3 = () => {
