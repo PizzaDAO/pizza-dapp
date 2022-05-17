@@ -2745,8 +2745,9 @@
       // } else {
         console.log("Generating proof")
         //let proof = createPrePurchaseProof(addressIndex)
-        let proof = generatePresaleProof(WHITELIST)
+        let proof = getPresaleProof(WHITELIST)
         //let proof = proofmtjs(WHITELIST)
+
 
         console.log("proof: ", proof)
         console.log("Trying to buy box - presale")
@@ -3074,6 +3075,26 @@
       const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
       return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
     }
+
+    const getPresaleProof = (claimList) => {
+      // Latest version on call with Rhiz
+      const leaves = []
+      const data = []
+
+      claimList.forEach((item) => {
+        if (!data.includes(item.address.toLowerCase())) {
+          data.push(item.address.toLowerCase())
+
+          leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
+        }
+      })
+      const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+
+      return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
+      //return { tree: claimListMerkleTree, leaves: leaves, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
+      //result.tree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
+    }
+
 
     const proofmtjs = (claimList) => {
       // Trying to follow official example from https://www.npmjs.com/package/merkletreejs
