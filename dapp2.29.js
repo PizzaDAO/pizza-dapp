@@ -2800,47 +2800,47 @@
 
       // Check number of boxes
       console.log("walletAddress: ", walletAddress)
-      BoxInstance.methods.balanceOf(walletAddress.address).call()
-        .then((balance) => {
-          pizzasToRedeem = 0
-          for (let i = 0; i < balance; i++) {
-
-            // Check address owned ids
-            BoxInstance.methods.tokenOfOwnerByIndex(walletAddress.address, i).call()
-              .then((boxId) => {
-                console.log("Owner of boxId: ", boxId)
-
-                // Check if it was redeemed
-                PizzaInstance.methods.isRedeemed(boxIdField.value).call()
-                  .then((value) => {
-                    console.log('isRedeemed: ', value)
-                    if (value) {
-                      console.log("Box already opened: ", boxId)
-                      boxCheckLabel.innerHTML = 'Box was already opened!'
-                    } else {
-                      console.log("Box still closed: ", boxId)
-                      boxCheckLabel.innerHTML = 'Box is still closed!'
-                      // Add option to bake pie selector
-                      var opt = document.createElement('option');
-                      opt.value = i;
-                      opt.innerHTML = i;
-                      selectBox.appendChild(opt)
-                      pizzasToRedeem++
-                    }
-                  })
-                  .catch((error) => {
-                    boxCheckLabel.innerHTML = 'Error: ' + error
-                    console.log('isRedeemed failed: ', error)
-                  })
-              })
-              .catch((error) => {
-                console.log('Failed to get boxId for index: ', i, ' with error: ', error)
-              })
-          }
-        })
-        .catch((error) => {
-          console.log('box totalNewPurchases failed: ', error)
-        })
+      // BoxInstance.methods.balanceOf(walletAddress).call()
+      //   .then((balance) => {
+      //     pizzasToRedeem = 0
+      //     for (let i = 0; i < balance; i++) {
+      //
+      //       // Check address owned ids
+      //       BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, i).call()
+      //         .then((boxId) => {
+      //           console.log("Owner of boxId: ", boxId)
+      //
+      //           // Check if it was redeemed
+      //           PizzaInstance.methods.isRedeemed(boxIdField.value).call()
+      //             .then((value) => {
+      //               console.log('isRedeemed: ', value)
+      //               if (value) {
+      //                 console.log("Box already opened: ", boxId)
+      //                 boxCheckLabel.innerHTML = 'Box was already opened!'
+      //               } else {
+      //                 console.log("Box still closed: ", boxId)
+      //                 boxCheckLabel.innerHTML = 'Box is still closed!'
+      //                 // Add option to bake pie selector
+      //                 var opt = document.createElement('option');
+      //                 opt.value = i;
+      //                 opt.innerHTML = i;
+      //                 selectBox.appendChild(opt)
+      //                 pizzasToRedeem++
+      //               }
+      //             })
+      //             .catch((error) => {
+      //               boxCheckLabel.innerHTML = 'Error: ' + error
+      //               console.log('isRedeemed failed: ', error)
+      //             })
+      //         })
+      //         .catch((error) => {
+      //           console.log('Failed to get boxId for index: ', i, ' with error: ', error)
+      //         })
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log('box totalNewPurchases failed: ', error)
+      //   })
 
       PizzaInstance.methods.balanceOf(walletAddress).call()
         .then((balance) => {
