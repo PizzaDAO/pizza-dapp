@@ -2748,76 +2748,70 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
           mainSaleActive = false
         }
         console.log(date)
-      console.log(salestart)
+        console.log(salestart)
         console.log(mainSaleActive)
-      
-        if(mainSaleActive) {
-            BoxInstance.methods.multiPurcahse(numberToMint).send({
-          from: walletAddress,
-          value: priceInWei*n
+      if(mainSaleActive) {
+        BoxInstance.methods.multiPurchase(numberToMint).send({
+        from: walletAddress,
+        value: priceInWei*n
+      })
+        .on('transactionHash', (hash) => {
+          console.log('transactionHash: ', hash)
+
+          txHash = hash
+          display(buyButton)
         })
-          .on('transactionHash', (hash) => {
-            console.log('transactionHash: ', hash)
-
-            txHash = hash
-            display(buyButton)
-          })
-          .on('receipt', (receipt) => {
-            console.log('receipt: ', receipt)
-            txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
-            updateValues()
-          })
-          .on('error', (err, receipt) => {
-            console.log('Transaction failed: ', err, 'br/', receipt)
-
-            if (err.code === 4001) {
-              txLabel.innerHTML = 'Transaction rejected'
-            } else {
-              txLabel.innerHTML = 'Something went wrong, try again!'
-            }
-            display(buyButton)
-          })
-
-        else {
-         console.log("Generating proof")
-        //let proof = createPrePurchaseProof(addressIndex)
-        let proof = getPresaleProof(WHITELIST,walletAddress)
-        //let proof = proofmtjs(WHITELIST)
-         console.log("proof: ", proof)
-        console.log("Trying to buy box - presale")
-          BoxInstance.methods.prePurchase(proof,numberToMint).send({
-          from: walletAddress,
-          value: priceInWei
+        .on('receipt', (receipt) => {
+          console.log('receipt: ', receipt)
+          txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+            <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
+          updateValues()
         })
-          .on('transactionHash', (hash) => {
-            console.log('transactionHash: ', hash)
+        .on('error', (err, receipt) => {
+          console.log('Transaction failed: ', err, 'br/', receipt)
 
-            txHash = hash
-            display(buyButton)
-          })
-          .on('receipt', (receipt) => {
-            console.log('receipt: ', receipt)
-            txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
-            updateValues()
-          })
-          .on('error', (err, receipt) => {
-            console.log('Transaction failed: ', err, 'br/', receipt)
+          if (err.code === 4001) {
+            txLabel.innerHTML = 'Transaction rejected'
+          } else {
+            txLabel.innerHTML = 'Something went wrong, try again!'
+          }
+          display(buyButton)
+        })
+      } else {
+       console.log("Generating proof")
+      //let proof = createPrePurchaseProof(addressIndex)
+      let proof = getPresaleProof(WHITELIST,walletAddress)
+      //let proof = proofmtjs(WHITELIST)
+       console.log("proof: ", proof)
+      console.log("Trying to buy box - presale")
+        BoxInstance.methods.prePurchase(proof,numberToMint).send({
+        from: walletAddress,
+        value: priceInWei
+      })
+        .on('transactionHash', (hash) => {
+          console.log('transactionHash: ', hash)
 
-            if (err.code === 4001) {
-              txLabel.innerHTML = 'Transaction rejected'
-            } else {
-              txLabel.innerHTML = 'Something went wrong, try again!'
-            }
-            display(buyButton)
-          })
+          txHash = hash
+          display(buyButton)
+        })
+        .on('receipt', (receipt) => {
+          console.log('receipt: ', receipt)
+          txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+            <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
+          updateValues()
+        })
+        .on('error', (err, receipt) => {
+          console.log('Transaction failed: ', err, 'br/', receipt)
 
-        }
-        
-              //}
-
-    }
+          if (err.code === 4001) {
+            txLabel.innerHTML = 'Transaction rejected'
+          } else {
+            txLabel.innerHTML = 'Something went wrong, try again!'
+          }
+          display(buyButton)
+        })
+      }
+  }
 
     const updateValues = () => {
 
