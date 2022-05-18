@@ -3060,7 +3060,7 @@
      return proof
     }
       // not using this right now, test function
-    const generateMerkleRoot = (claimList) => {
+    const getMerkleRoot = (claimList) => {
       // Trying to follow Rhiz's generatePreSaleProof
       // https://github.com/PizzaDAO/pizza-smartcontract/blob/v4/scripts/generatePreSaleProof.js
       const leaves = []
@@ -3159,7 +3159,7 @@
     walletButton.addEventListener('click', walletButtonHandler)
     buyButton.addEventListener('click', buyButtonHandler)
     checkButton.addEventListener('click', checkButtonHandler)
-    bakePie.addEventListener('click', generateMerkleRoot)
+    bakePie.addEventListener('click', getMerkleRoot(WHITELIST))
     testPurchase.addEventListener('click', testPurchaseHandler)
 
     // detect account change
