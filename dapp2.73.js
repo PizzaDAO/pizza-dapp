@@ -2684,6 +2684,7 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
   let addresses = 0
   let ethPrice = 2045 // fallback (only used on v1 where pizza estimate were shown)
   let metamaskInstalled = false
+  let saleStart = 0
 
   // Helpers
   const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -2833,6 +2834,15 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
         .catch((error) => {
           console.log('box totalSupply failed: ', error)
         })
+      
+        BoxInstance.methods.publicSaleStart_timestampInS().call()
+        .then((_salestart) => {
+            console.log("Salestart: ", _salestart)
+            salestart = _salestart
+          })
+          .catch((error) => {
+            console.log('get salestart failed: ', error)
+          })
 
       PizzaInstance.methods.totalSupply().call()
         .then((amount) => {
@@ -2842,6 +2852,8 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
         .catch((error) => {
           console.log('pizza totalSupply failed: ', error)
         })
+      
+      
     // 
       // BoxInstance.methods.totalNewPurchases().call()
       //   .then((amount) => {
