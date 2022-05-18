@@ -2947,8 +2947,8 @@
 
     const bakePieHandler = async () => {
       console.log('Bake pie button pressed')
-        console.log("pizzasToRedeem: ", pizzasToRedeem)
       getMerkleRoot(WHITELIST)
+      console.log("pizzasToRedeem: ", pizzasToRedeem)  
       if (pizzasToRedeem > 0) {
 
         await handleUser()
