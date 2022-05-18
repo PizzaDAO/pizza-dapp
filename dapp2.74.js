@@ -2737,17 +2737,6 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
       // if (addressIndex === -1) {
       //   console.log("Not on whitelist")
       // } else {
-
-        
-        let salestart
-        BoxInstance.methods.publicSaleStart_timestampInS().call()
-        .then((_salestart) => {
-            console.log("Salestart: ", _salestart)
-            salestart = _salestart
-          })
-          .catch((error) => {
-            console.log('get salestart failed: ', error)
-          })
       
         let date = new Date()
         
