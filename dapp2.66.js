@@ -135,15 +135,7 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
       },
       {
           "address": "0x10e50be810a2914ee1896311Ccfb041b6A6bb7c7"
-      },
-      {
-          "address": "0x11EeE6CDFee403Ee838D9AA7E10f8449AD7e6402"
-      },
-      {
-          "address": "0x121c99d11809E44F2874e4142743fA3618936040"
-      },
-      {
-          "address": "0x128e482c59E2370d65Cb273a0cf8e2AC0629d9a1"
+      },selectMintQuantityselectMintQuantity
       },
       {
           "address": "0x147b0BF026B15a8f7fDaBc4c3CD3A42Fdbb2f6BD"
@@ -2739,19 +2731,60 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
 
       console.log("walletAddress: ", walletAddress)
       console.log("addressIndex: ", addressIndex)
-
+      
+      let numberToMint = selectMintQuantity.value
+      
       // if (addressIndex === -1) {
       //   console.log("Not on whitelist")
       // } else {
-        console.log("Generating proof")
+
+        
+        let salestart = BoxInstance.methods.publicSaleStart_timestampInS.call()
+        let date = new Date()
+        
+        let mainSaleActive
+        if(date>salestart*1000){
+          mainSaleActive = true
+        } else {
+          mainSaleActive = false
+        }
+      
+        if(mainSaleActive) {
+            BoxInstance.methods.multiPurcahse(numberToMint).send({
+          from: walletAddress,
+          value: priceInWei*n
+        })
+          .on('transactionHash', (hash) => {
+            console.log('transactionHash: ', hash)
+
+            txHash = hash
+            display(buyButton)
+          })
+          .on('receipt', (receipt) => {
+            console.log('receipt: ', receipt)
+            txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
+            updateValues()
+          })
+          .on('error', (err, receipt) => {
+            console.log('Transaction failed: ', err, 'br/', receipt)
+
+            if (err.code === 4001) {
+              txLabel.innerHTML = 'Transaction rejected'
+            } else {
+              txLabel.innerHTML = 'Something went wrong, try again!'
+            }
+            display(buyButton)
+          })
+
+        else {
+         console.log("Generating proof")
         //let proof = createPrePurchaseProof(addressIndex)
         let proof = getPresaleProof(WHITELIST,walletAddress)
         //let proof = proofmtjs(WHITELIST)
-
-
-        console.log("proof: ", proof)
+         console.log("proof: ", proof)
         console.log("Trying to buy box - presale")
-        BoxInstance.methods.prePurchase(proof).send({
+          BoxInstance.methods.prePurchase(proof,numberToMint).send({
           from: walletAddress,
           value: priceInWei
         })
@@ -2777,7 +2810,10 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
             }
             display(buyButton)
           })
-      //}
+
+        }
+        
+              //}
 
     }
 
