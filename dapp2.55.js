@@ -2843,6 +2843,7 @@
                          opt.value = i;
                          opt.innerHTML = i;
                          selectBox.add(opt)
+                         console.log("selectBox",selectBox)
                          pizzasToRedeem++
                        }
                      })
