@@ -2948,7 +2948,6 @@
 
     const bakePieHandler = async () => {
       console.log('Bake pie button pressed')
-      getMerkleRoot(WHITELIST)
       console.log("pizzasToRedeem: ", pizzasToRedeem)  
       if (pizzasToRedeem > 0) {
 
@@ -2959,7 +2958,7 @@
           promptMetamask()
         } else {
           console.log("Trying to bake")
-          PizzaInstance.methods.redeemRarePizzasBox(parseFloat(selectBox.value), parseFloat(selectRecipe.value)).send()
+          PizzaInstance.methods.redeemRarePizzasBox(web3.utils.toBN(selectBox.value), web3.utils.toBN(selectRecipe.value)).send()
             .on('transactionHash', (hash) => {
               console.log('transactionHash: ', hash)
 
