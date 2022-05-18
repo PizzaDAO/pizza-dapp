@@ -2958,7 +2958,7 @@
           promptMetamask()
         } else {
           console.log("Trying to bake")
-          PizzaInstance.methods.redeemRarePizzasBox(web3.utils.toBN(selectBox.value), web3.utils.toBN(selectRecipe.value)).send()
+          PizzaInstance.methods.redeemRarePizzasBox(selectBox.value, selectRecipe.value).send()
             .on('transactionHash', (hash) => {
               console.log('transactionHash: ', hash)
 
