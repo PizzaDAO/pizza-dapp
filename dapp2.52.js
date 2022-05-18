@@ -2746,7 +2746,7 @@
       // } else {
         console.log("Generating proof")
         //let proof = createPrePurchaseProof(addressIndex)
-        let proof = getPresaleProof(WHITELIST)
+        let proof = getPresaleProof(WHITELIST,walletAddress)
         //let proof = proofmtjs(WHITELIST)
 
 
@@ -2802,7 +2802,7 @@
         .catch((error) => {
           console.log('pizza totalSupply failed: ', error)
         })
-
+    // 
       // BoxInstance.methods.totalNewPurchases().call()
       //   .then((amount) => {
       //     boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
@@ -3079,7 +3079,7 @@
       return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
     }
       // This is the current proof function that is being called. This is where our bug is.
-    const getPresaleProof = (claimList) => {
+    const getPresaleProof = (claimList,walletAddress) => {
       // Latest version on call with Rhiz
       const leaves = []
       const data = []
@@ -3093,7 +3093,7 @@
       })
       const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
 
-      return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
+      return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], [walletAddress]))
       //return { tree: claimListMerkleTree, leaves: leaves, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
       //result.tree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
     }
