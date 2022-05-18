@@ -2824,36 +2824,36 @@
               console.log("Trying tokenOfOwnerByIndex for wallet: ", walletAddress)
               console.log("and tokenIndex: ", i)
 
-              // BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(i)).call()
-              //   .then((boxId) => {
-              //     console.log("Owner of boxId: ", boxId)
-              //
-              //     // Check if it was redeemed
-              //     PizzaInstance.methods.isRedeemed(parseFloat(boxIdField.value)).call()
-              //       .then((value) => {
-              //         console.log('isRedeemed: ', value)
-              //         if (value) {
-              //           console.log("Box already opened: ", boxId)
-              //           boxCheckLabel.innerHTML = 'Box was already opened!'
-              //         } else {
-              //           console.log("Box still closed: ", boxId)
-              //           boxCheckLabel.innerHTML = 'Box is still closed!'
-              //           // Add option to bake pie selector
-              //           var opt = document.createElement('option');
-              //           opt.value = i;
-              //           opt.innerHTML = i;
-              //           selectBox.appendChild(opt)
-              //           pizzasToRedeem++
-              //         }
-              //       })
-              //       .catch((error) => {
-              //         boxCheckLabel.innerHTML = 'Error: ' + error
-              //         console.log('isRedeemed failed: ', error)
-              //       })
-              //   })
-              //   .catch((error) => {
-              //     console.log('Failed to get boxId for index: ', i, ' with error: ', error)
-              //   })
+               BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(i)).call()
+                 .then((boxId) => {
+                   console.log("Owner of boxId: ", boxId)
+              
+                   // Check if it was redeemed
+                   PizzaInstance.methods.isRedeemed(parseFloat(boxIdField.value)).call()
+                     .then((value) => {
+                       console.log('isRedeemed: ', value)
+                       if (value) {
+                         console.log("Box already opened: ", boxId)
+                         boxCheckLabel.innerHTML = 'Box was already opened!'
+                       } else {
+                         console.log("Box still closed: ", boxId)
+                         boxCheckLabel.innerHTML = 'Box is still closed!'
+                         // Add option to bake pie selector
+                         var opt = document.createElement('option');
+                         opt.value = i;
+                         opt.innerHTML = i;
+                         selectBox.appendChild(opt)
+                         pizzasToRedeem++
+                       }
+                     })
+                     .catch((error) => {
+                       boxCheckLabel.innerHTML = 'Error: ' + error
+                       console.log('isRedeemed failed: ', error)
+                     })
+                 })
+                 .catch((error) => {
+                   console.log('Failed to get boxId for index: ', i, ' with error: ', error)
+                 })
             }
           })
           .catch((error) => {
