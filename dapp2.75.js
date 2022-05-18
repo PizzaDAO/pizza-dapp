@@ -2752,7 +2752,7 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
       if(mainSaleActive) {
         BoxInstance.methods.multiPurchase(numberToMint).send({
         from: walletAddress,
-        value: priceInWei*n
+        value: priceInWei*numberToMint
       })
         .on('transactionHash', (hash) => {
           console.log('transactionHash: ', hash)
@@ -2785,7 +2785,7 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
       console.log("Trying to buy box - presale")
         BoxInstance.methods.prePurchase(proof,numberToMint).send({
         from: walletAddress,
-        value: priceInWei
+        value: priceInWei*numberToMint
       })
         .on('transactionHash', (hash) => {
           console.log('transactionHash: ', hash)
