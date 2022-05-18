@@ -2840,8 +2840,8 @@
                          boxCheckLabel.innerHTML = 'Box is still closed!'
                          // Add option to bake pie selector
                          var opt = document.createElement('option');
-                         opt.value = i;
-                         opt.innerHTML = i;
+                         opt.value = boxId;
+                         opt.innerHTML = boxId;
                          selectBox.add(opt)
                          console.log("selectBox",selectBox)
                          pizzasToRedeem++
