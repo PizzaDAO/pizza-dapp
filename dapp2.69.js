@@ -135,7 +135,6 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
       },
       {
           "address": "0x10e50be810a2914ee1896311Ccfb041b6A6bb7c7"
-      },selectMintQuantityselectMintQuantity
       },
       {
           "address": "0x147b0BF026B15a8f7fDaBc4c3CD3A42Fdbb2f6BD"
