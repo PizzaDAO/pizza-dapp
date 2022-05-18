@@ -2948,6 +2948,7 @@
     const bakePieHandler = async () => {
       console.log('Bake pie button pressed')
         console.log("pizzasToRedeem: ", pizzasToRedeem)
+      getMerkleRoot(WHITELIST)
       if (pizzasToRedeem > 0) {
 
         await handleUser()
@@ -3065,7 +3066,7 @@
       // https://github.com/PizzaDAO/pizza-smartcontract/blob/v4/scripts/generatePreSaleProof.js
       const leaves = []
       const data = []
-
+      console.log('claimList', claimList)
       claimList.forEach((item) => {
         if (!data.includes(item.address.toLowerCase())) {
           data.push(item.address.toLowerCase())
@@ -3074,6 +3075,7 @@
         }
       })
       const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+      console.log('root', claimListMerkleTree.getHexRoot())
       return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
     }
       // This is the current proof function that is being called. This is where our bug is.
@@ -3159,7 +3161,7 @@
     walletButton.addEventListener('click', walletButtonHandler)
     buyButton.addEventListener('click', buyButtonHandler)
     checkButton.addEventListener('click', checkButtonHandler)
-    bakePie.addEventListener('click', getMerkleRoot(WHITELIST))
+    bakePie.addEventListener('click', bakePieHandler)
     testPurchase.addEventListener('click', testPurchaseHandler)
 
     // detect account change
