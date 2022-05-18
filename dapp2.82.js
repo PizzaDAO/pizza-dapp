@@ -3148,7 +3148,9 @@ const onLoadHandler = () => {
         leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
       }
     })
+  
     const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+    console.log(claimListMerkleTree)
     console.log(claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], [walletAddress])))
     return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], [walletAddress]))
     //return { tree: claimListMerkleTree, leaves: leaves, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
