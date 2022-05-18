@@ -2739,7 +2739,7 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
 
         
         let salestart
-        BoxInstance.methods.publicSaleStart_timestampInS.call()
+        BoxInstance.methods.publicSaleStart_timestampInS().call()
         .then((_salestart) => {
             console.log("Salestart: ", _salestart)
             salestart = _salestart
