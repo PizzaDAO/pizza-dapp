@@ -2818,13 +2818,13 @@
           .then((balance) => {
             console.log(walletAddress, " owns ", balance, "boxes")
             pizzasToRedeem = 0
-            for (let i = balance; i >= 0; i--) {
+            for (let i = balance; i > 0; i--) {
 
               // Check address owned ids
               console.log("Trying tokenOfOwnerByIndex for wallet: ", walletAddress)
-              console.log("and tokenIndex: ", i)
+              console.log("and tokenIndex: ", balance-i)
 
-               BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(i)).call()
+               BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
                  .then((boxId) => {
                    console.log("Owner of boxId: ", boxId)
               
