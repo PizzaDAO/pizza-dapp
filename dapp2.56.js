@@ -2818,7 +2818,7 @@
           .then((balance) => {
             console.log(walletAddress, " owns ", balance, "boxes")
             pizzasToRedeem = 0
-            for (let i = 0; i < balance; i++) {
+            for (let i = balance; i > 0; i--) {
 
               // Check address owned ids
               console.log("Trying tokenOfOwnerByIndex for wallet: ", walletAddress)
