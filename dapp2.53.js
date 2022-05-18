@@ -2829,7 +2829,7 @@
                    console.log("Owner of boxId: ", boxId)
               
                    // Check if it was redeemed
-                   PizzaInstance.methods.isRedeemed(parseFloat(boxIdField.value)).call()
+                   PizzaInstance.methods.isRedeemed(boxId).call()
                      .then((value) => {
                        console.log('isRedeemed: ', value)
                        if (value) {
