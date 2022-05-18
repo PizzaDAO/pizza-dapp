@@ -2840,6 +2840,7 @@
                          boxCheckLabel.innerHTML = 'Box is still closed!'
                          // Add option to bake pie selector
                          var opt = document.createElement('option');
+                         console.log("box value",boxId)
                          opt.value = boxId;
                          opt.innerHTML = boxId;
                          selectBox.add(opt)
@@ -2958,7 +2959,7 @@
           promptMetamask()
         } else {
           console.log("Trying to bake")
-          PizzaInstance.methods.redeemRarePizzasBox(selectBox.value, selectRecipe.value).send()
+          PizzaInstance.methods.redeemRarePizzasBox(parseFloat(selectBox.value), parseFloat(selectRecipe.value)).send()
             .on('transactionHash', (hash) => {
               console.log('transactionHash: ', hash)
 
