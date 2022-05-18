@@ -2959,6 +2959,7 @@
           promptMetamask()
         } else {
           console.log("Trying to bake")
+          console.log("parseFloat boxId",parseFloat(selectBox.value))
           PizzaInstance.methods.redeemRarePizzasBox(parseFloat(selectBox.value), parseFloat(selectRecipe.value)).send()
             .on('transactionHash', (hash) => {
               console.log('transactionHash: ', hash)
