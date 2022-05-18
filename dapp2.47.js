@@ -3077,25 +3077,38 @@
       return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
     }
 
-    const getPresaleProof = (claimList) => {
-      // Latest version on call with Rhiz
-      const leaves = []
-      const data = []
+//     const getPresaleProof = (claimList) => {
+//       // Latest version on call with Rhiz
+//       const leaves = []
+//       const data = []
 
-      claimList.forEach((item) => {
-        if (!data.includes(item.address.toLowerCase())) {
-          data.push(item.address.toLowerCase())
+//       claimList.forEach((item) => {
+//         if (!data.includes(item.address.toLowerCase())) {
+//           data.push(item.address.toLowerCase())
 
-          leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
-        }
-      })
-      const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
+//           leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
+//         }
+//       })
+//       const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
 
-      return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
-      //return { tree: claimListMerkleTree, leaves: leaves, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
-      //result.tree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
-    }
+//       return claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
+//       //return { tree: claimListMerkleTree, leaves: leaves, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
+//       //result.tree.getHexProof(ethers.utils.solidityKeccak256(['address'], ['0x0048d02963b97445a012ad6d44bd38a0239c5b88']))
+//     }
 
+      const getPresaleProof = (claimList) => {
+        const indexOfUser = claimList
+        .map((x) => x['address'].toLowerCase())
+        .indexOf(wallet.toLowerCase());
+        const claimListHashes = claimList.map((x) =>
+          ethers.utils.solidityKeccak256(['address', 'uint256'], [x['address'].toLowerCase(), x['amount']])
+        );
+        const claimListMerkleTree = new MerkleTree(claimListHashes, keccak256, { sort: true });
+        let proof = claimListMerkleTree.getProof(claimListHashes[indexOfUser]);
+        proof = proof.map((item: any) => '0x' + item.data.toString('hex'));
+        return proof
+      
+      }
 
     const proofmtjs = (claimList) => {
       // Trying to follow official example from https://www.npmjs.com/package/merkletreejs
