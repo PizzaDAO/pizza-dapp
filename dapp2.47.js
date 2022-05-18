@@ -3047,7 +3047,7 @@
         console.log(error);
       }
     }
-
+      // not using this right now, test function
     const createPrePurchaseProof = (indexOfUser) => {
       // Trying to follow Rhiz's frontend example:
       // https://github.com/PizzaDAO/pizza-dapp/blob/a0c6a8dd7aafd9e01b5bf3f54635715e2fc5ef70/dapp.html#L1378
@@ -3059,8 +3059,8 @@
      proof = proof.map((item) => '0x' + item.data.toString('hex'));
      return proof
     }
-
-    const generatePresaleProof = (claimList) => {
+      // not using this right now, test function
+    const generateMerkleRoot = (claimList) => {
       // Trying to follow Rhiz's generatePreSaleProof
       // https://github.com/PizzaDAO/pizza-smartcontract/blob/v4/scripts/generatePreSaleProof.js
       const leaves = []
@@ -3076,7 +3076,7 @@
       const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
       return { tree: claimListMerkleTree, root: '0x' + claimListMerkleTree.getHexRoot(), data: data }
     }
-
+      // This is the current proof function that is being called. This is where our bug is.
     const getPresaleProof = (claimList) => {
       // Latest version on call with Rhiz
       const leaves = []
@@ -3159,7 +3159,7 @@
     walletButton.addEventListener('click', walletButtonHandler)
     buyButton.addEventListener('click', buyButtonHandler)
     checkButton.addEventListener('click', checkButtonHandler)
-    bakePie.addEventListener('click', bakePieHandler)
+    bakePie.addEventListener('click', generateMerkleRoot)
     testPurchase.addEventListener('click', testPurchaseHandler)
 
     // detect account change
