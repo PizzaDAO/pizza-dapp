@@ -2842,7 +2842,7 @@
                          var opt = document.createElement('option');
                          opt.value = i;
                          opt.innerHTML = i;
-                         selectBox.appendChild(opt)
+                         selectBox.add(opt)
                          pizzasToRedeem++
                        }
                      })
