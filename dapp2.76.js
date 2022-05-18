@@ -3123,6 +3123,10 @@ const PIZZA_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"
     }
       // This is the current proof function that is being called. This is where our bug is.
     const getPresaleProof = (claimList,walletAddress) => {
+      console.log("getPresaleProof")
+      console.log(walletAddress)
+      console.log(claimList)
+      
       // Latest version on call with Rhiz
       const leaves = []
       const data = []
