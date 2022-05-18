@@ -1,6 +1,6 @@
   // Ropsten
-  const NETWORK = 'ropsten.'
-  const BOX_ADDRESS = '0x49700447bd9ea896f2f999c1bf20eb630d2c65e4'
+  const NETWORK = 'rinkeby.'
+  const BOX_ADDRESS = '0x8f5AE25105C3c03Bce89aE3b5ed1E30456755fAb'
   //const BOX_ADDRESS = '0xA61Ff9D3de8E58FB8D7dF9b98922775c513361Bf'
   const PIZZA_ADDRESS = '0x034bca7eb8d705f2a52bba52b94e98161d5370d4'
   // // // Mainnet
