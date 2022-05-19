@@ -2695,6 +2695,7 @@ let maxNewPurchases = 6000
 let priceInWei = 80000000000000000
 let walletAddress = 0
 let addresses = 0
+let pizzasToRedeem = 0
 let ethPrice = 2045 // fallback (only used on v1 where pizza estimate were shown)
 let metamaskInstalled = false
 let saleStart = 0
@@ -2882,7 +2883,6 @@ const onLoadHandler = () => {
 
           const boxes = []
           const promises = []
-          let pizzasToRedeem = 0
 
           for (let i = balance; i > 0; i--) {
             promises.push(
@@ -2895,7 +2895,13 @@ const onLoadHandler = () => {
 
           const results = await Promise.all(
             boxes.map(boxId =>
-              PizzaInstance.methods.isRedeemed(boxId).call().then(value => !value)
+              PizzaInstance.methods.isRedeemed(boxId).call()
+              .then(value => !value
+                console.log("Setting isRedeemed value:", value, " for boxId: ", boxId)
+              )
+              .catch((error) => {
+                console.log('isRedeemed failed: ', error)
+              })
             )
           )
 
