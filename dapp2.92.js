@@ -2755,13 +2755,13 @@ const onLoadHandler = () => {
       let date = new Date()
 
       let mainSaleActive
-      if(date>(salestart*1000)){
+      if(date>(saleStart*1000)){
         mainSaleActive = true
       } else {
         mainSaleActive = false
       }
       console.log(date)
-      console.log(salestart)
+      console.log(saleStart)
       console.log(mainSaleActive)
     if(mainSaleActive) {
       BoxInstance.methods.multiPurchase(numberToMint).send({
@@ -2832,19 +2832,19 @@ const onLoadHandler = () => {
     BoxInstance.methods.totalSupply().call()
       .then((amount) => {
         console.log("BoxInstance.totalSupply: ", amount)
-        boxesLabel.innerHTML = numberWithCommas(10000 - 824 - amount)
+        //boxesLabel.innerHTML = numberWithCommas(10000 - amount) // for prev versions
       })
       .catch((error) => {
         console.log('box totalSupply failed: ', error)
       })
 
       BoxInstance.methods.publicSaleStart_timestampInS().call()
-      .then((_salestart) => {
-          console.log("Salestart: ", _salestart)
-          salestart = _salestart
+      .then((_saleStart) => {
+          console.log("Salestart: ", _saleStart)
+          saleStart = _saleStart
         })
         .catch((error) => {
-          console.log('get salestart failed: ', error)
+          console.log('get saleStart failed: ', error)
         })
 
     PizzaInstance.methods.totalSupply().call()
@@ -2856,17 +2856,18 @@ const onLoadHandler = () => {
         console.log('pizza totalSupply failed: ', error)
       })
 
-
-  //
-    // BoxInstance.methods.totalNewPurchases().call()
-    //   .then((amount) => {
-    //     boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
-    //   })
-    //   .catch((error) => {
-    //     console.log('box totalNewPurchases failed: ', error)
-    //   })
+    BoxInstance.methods.totalNewPurchases().call()
+      .then((amount) => {
+        boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
+      })
+      .catch((error) => {
+        console.log('box totalNewPurchases failed: ', error)
+      })
 
     if (walletAddress != 0) {
+
+      let unredeemedBoxes = []
+
       // Check number of boxes
       console.log("walletAddress: ", walletAddress)
       BoxInstance.methods.balanceOf(walletAddress).call()
@@ -2892,16 +2893,21 @@ const onLoadHandler = () => {
                        boxCheckLabel.innerHTML = 'Box was already opened!'
                      } else {
                        console.log("Box still closed: ", boxId)
-                       boxCheckLabel.innerHTML = 'Box is still closed!'
+                       unredeemedBoxes.push(boxId)
+                       boxCheckLabel.innerHTML = 'Box is still closed'
+
+                       pizzasToRedeem++
+                     }
+
+                     unredeemedBoxes.sort((a,b)=>a-b)
+                     for (let i = balance; i > 0; i--) {
                        // Add option to bake pie selector
                        var opt = document.createElement('option');
-                       console.log("box value",boxId)
                        opt.value = boxId;
                        opt.innerHTML = boxId;
                        selectBox.add(opt)
-                       console.log("selectBox",selectBox)
-                       pizzasToRedeem++
                      }
+
                    })
                    .catch((error) => {
                      boxCheckLabel.innerHTML = 'Error: ' + error
@@ -3093,7 +3099,7 @@ const onLoadHandler = () => {
   const hide = (element) => {
     inActivePurchase = true
     element.style.pointerEvents = 'none'
-    element.style.borderColor = "#111425"
+    element.style.borderColor = "#303436"
   }
 
   const display = (element) => {
