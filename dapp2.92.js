@@ -2872,7 +2872,10 @@ const onLoadHandler = () => {
       BoxInstance.methods.balanceOf(walletAddress).call()
         .then((balance) => {
           console.log(walletAddress, " owns ", balance, "boxes")
-          pizzasToRedeem = 0
+          const pizzaOptions = []
+          let pizzasToRedeem = 0
+
+          // loop through each box
           for (let i = balance; i > 0; i--) {
 
             // Check address owned ids
@@ -2898,7 +2901,7 @@ const onLoadHandler = () => {
                        console.log("box value",boxId)
                        opt.value = boxId;
                        opt.innerHTML = boxId;
-                       selectBox.add(opt)
+                       pizzaOptions.push(opt)
                        console.log("selectBox",selectBox)
                        pizzasToRedeem++
                      }
@@ -2911,6 +2914,13 @@ const onLoadHandler = () => {
                .catch((error) => {
                  console.log('Failed to get boxId for index: ', i, ' with error: ', error)
                })
+          }
+
+          // sort select options and push them to select
+          if (pizzasToRedeem.length) {
+            pizzaOptions
+              .sort((a, b) => parseInt(a.value) > parseInt(b.value))
+              .forEach(pizzaOpt => selectBox.add(pizzaOpt))
           }
         })
         .catch((error) => {
