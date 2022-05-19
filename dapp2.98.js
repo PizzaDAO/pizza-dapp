@@ -2774,11 +2774,11 @@ const onLoadHandler = () => {
         txHash = hash
         display(buyButton)
       })
-      .on('receipt', (receipt) => {
+      .on('receipt', async (receipt) => {
         console.log('receipt: ', receipt)
         txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
           <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
-        updateValues()
+        await updateValues()
       })
       .on('error', (err, receipt) => {
         console.log('Transaction failed: ', err, 'br/', receipt)
@@ -2807,11 +2807,11 @@ const onLoadHandler = () => {
         txHash = hash
         display(buyButton)
       })
-      .on('receipt', (receipt) => {
+      .on('receipt', async (receipt) => {
         console.log('receipt: ', receipt)
         txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
           <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
-        updateValues()
+        await updateValues()
       })
       .on('error', (err, receipt) => {
         console.log('Transaction failed: ', err, 'br/', receipt)
@@ -2826,7 +2826,7 @@ const onLoadHandler = () => {
     }
 }
 
-  const updateValues = () => {
+  const updateValues = async () => {
 
     // Checking total supplies
     BoxInstance.methods.totalSupply().call()
@@ -2863,55 +2863,25 @@ const onLoadHandler = () => {
       BoxInstance.methods.balanceOf(walletAddress).call()
         .then((balance) => {
           console.log(walletAddress, " owns ", balance, "boxes")
-          
-          const pizzaOptions = []
+
+          const boxes = []
+          const promises = []
           let pizzasToRedeem = 0
 
-          // loop through each box
           for (let i = balance; i > 0; i--) {
-
-            // Check address owned ids
-            console.log("Trying tokenOfOwnerByIndex for wallet: ", walletAddress)
-            console.log("and tokenIndex: ", balance-i)
-
-             BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
-               .then((boxId) => {
-                 console.log("Owner of boxId: ", boxId)
-
-                 // Check if it was redeemed
-                 PizzaInstance.methods.isRedeemed(boxId).call()
-                   .then((value) => {
-                     console.log('isRedeemed: ', value)
-                     if (value) {
-                       console.log("Box already opened: ", boxId)
-                       boxCheckLabel.innerHTML = 'Box was already opened!'
-                     } else {
-                       console.log("Box still closed: ", boxId)
-                       const opt = document.createElement('option')
-                       opt.value = boxId
-                       opt.innerHTML = boxId
-                       pizzaOptions.push(opt) // add option to array
-                       boxCheckLabel.innerHTML = 'Box is still closed'
-                       pizzasToRedeem++
-                     }
-
-                   })
-                   .catch((error) => {
-                     boxCheckLabel.innerHTML = 'Error: ' + error
-                     console.log('isRedeemed failed: ', error)
-                   })
-               })
-               .catch((error) => {
-                 console.log('Failed to get boxId for index: ', i, ' with error: ', error)
-               })
+            promises.push(BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
+              .then((boxId) => boxes.push(boxId)))
           }
-
-          // sort select options and push them to select
-          if (pizzaOptions.length) {
-            pizzaOptions
-              .sort((a, b) => parseInt(a.value) > parseInt(b.value))
-              .forEach(pizzaOpt => selectBox.add(pizzaOpt))
-          }
+          await Promise.all(promises);
+          
+          const results = await Promise.all(boxes.map(boxId => PizzaInstance.methods.isRedeemed(boxId).call()))
+          boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(box => {
+            const boxOption = document.createElement('option')
+            boxOption.setAttribute("value", box)
+            boxOption.innerHTML = toString(box)
+            selectBox.add(boxOption)
+            pizzasToRedeem++
+          })
         })
         .catch((error) => {
           console.log('box balanceOf failed: ', error)
@@ -2925,7 +2895,6 @@ const onLoadHandler = () => {
           console.log('pizza balanceOf failed: ', error)
         })
     }
-
   }
 
   const handleUser = async () => {
@@ -2983,13 +2952,13 @@ const onLoadHandler = () => {
           txHash = hash
           display(buyButton)
         })
-        .on('receipt', (receipt) => {
+        .on('receipt', async (receipt) => {
           console.log('receipt: ', receipt)
 
           txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
             <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
 
-          updateValues()
+          await updateValues()
         })
         .on('error', (err, receipt) => {
           console.log('Transaction failed: ', err, 'br/', receipt)
@@ -3024,13 +2993,13 @@ const onLoadHandler = () => {
             txHash = hash
             display(buyButton)
           })
-          .on('receipt', (receipt) => {
+          .on('receipt', async (receipt) => {
             console.log('receipt: ', receipt)
 
             pizzaWarning.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
               <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
 
-            updateValues()
+           await updateValues()
           })
           .on('error', (err, receipt) => {
             console.log('Transaction failed: ', err, 'br/', receipt)
@@ -3182,9 +3151,9 @@ const onLoadHandler = () => {
     PizzaInstance = new web3.eth.Contract(PIZZA_ABI, PIZZA_ADDRESS)
 
     BoxInstance.events.Transfer((err, e) => { console.log(e) })
-      .on('data', (e) =>{
+      .on('data', async (e) =>{
         console.log('event: ', e)
-        updateValues()
+        await updateValues()
       })
       .on('changed', (i) => {
         console.log('changed: ', i)
@@ -3192,7 +3161,7 @@ const onLoadHandler = () => {
       .on('error on Transfer', console.error)
 
     await handleUser()
-    updateValues()
+    await updateValues()
   }
 
   const initWeb3 = () => {
