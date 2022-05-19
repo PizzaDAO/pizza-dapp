@@ -2877,10 +2877,10 @@ const onLoadHandler = () => {
           
           const results = await Promise.all(boxes.map(boxId => PizzaInstance.methods.isRedeemed(boxId).call()))
 
-          boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(box => {
+          boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(boxId => {
             const boxOption = document.createElement('option')
-            boxOption.setAttribute("value", box)
-            boxOption.innerHTML = toString(box)
+            boxOption.setAttribute("value", boxId)
+            boxOption.innerHTML = boxId
             selectBox.add(boxOption)
             pizzasToRedeem++
           })
