@@ -3088,14 +3088,14 @@ const onLoadHandler = () => {
   }
 
   const hide = (element) => {
-    //element.style.display = 'none'
     inActivePurchase = true
+    element.style.pointerEvents = 'none'
     element.style.borderColor = "#4D807E"
   }
 
   const display = (element) => {
-    //element.style.display = 'block'
     inActivePurchase = false
+    element.style.pointerEvents = 'auto'
     element.style.borderColor = "#ffcf55"
   }
 
