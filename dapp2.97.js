@@ -2887,8 +2887,11 @@ const onLoadHandler = () => {
                        boxCheckLabel.innerHTML = 'Box was already opened!'
                      } else {
                        console.log("Box still closed: ", boxId)
+                       const opt = document.createElement('option')
+                       opt.value = boxId
+                       opt.innerHTML = boxId
+                       pizzaOptions.push(opt) // add option to array
                        boxCheckLabel.innerHTML = 'Box is still closed'
-                       pizzaOptions.push(opt)
                        pizzasToRedeem++
                      }
 
