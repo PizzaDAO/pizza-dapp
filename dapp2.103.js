@@ -2883,7 +2883,7 @@ const onLoadHandler = () => {
             )
           )
 
-          boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(boxId => {
+          boxes.filter((_v, index) => results[index]).sort((a, b) => parseInt(a) - parseInt(b)).forEach(boxId => {
             const boxOption = document.createElement('option')
             boxOption.setAttribute("value", boxId)
             boxOption.innerHTML = boxId
