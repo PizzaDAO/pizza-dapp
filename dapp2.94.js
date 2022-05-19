@@ -2891,15 +2891,6 @@ const onLoadHandler = () => {
                        pizzasToRedeem++
                      }
 
-                     unredeemedBoxes.sort((a,b)=>a-b)
-                     for (let i = balance; i > 0; i--) {
-                       // Add option to bake pie selector
-                       var opt = document.createElement('option');
-                       opt.value = boxId;
-                       opt.innerHTML = boxId;
-                       selectBox.add(opt)
-                     }
-
                    })
                    .catch((error) => {
                      boxCheckLabel.innerHTML = 'Error: ' + error
@@ -2910,6 +2901,16 @@ const onLoadHandler = () => {
                  console.log('Failed to get boxId for index: ', i, ' with error: ', error)
                })
           }
+
+          unredeemedBoxes.sort((a,b)=>a-b)
+          for (let i = balance; i > 0; i--) {
+            // Add option to bake pie selector
+            var opt = document.createElement('option');
+            opt.value = boxId;
+            opt.innerHTML = boxId;
+            selectBox.add(opt)
+          }
+
         })
         .catch((error) => {
           console.log('box balanceOf failed: ', error)
