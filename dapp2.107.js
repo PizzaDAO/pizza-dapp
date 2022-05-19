@@ -2772,7 +2772,7 @@ const onLoadHandler = () => {
       // Ropsten
       BoxInstance.methods.purchase().send({
       from: walletAddress,
-      value: priceInWeir
+      value: priceInWei
       })
       .on('transactionHash', (hash) => {
         console.log('transactionHash: ', hash)
