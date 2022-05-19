@@ -2869,13 +2869,15 @@ const onLoadHandler = () => {
           let pizzasToRedeem = 0
 
           for (let i = balance; i > 0; i--) {
-            promises.push(BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
-              .then((boxId) => boxes.push(boxId)))
+            promises.push(
+              BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
+                .then((boxId) => boxes.push(boxId))
+            )
           }
           
-          await Promise.all(promises);
+          await Promise.all(promises)
           
-          const results = await Promise.all(boxes.map(boxId => PizzaInstance.methods.isRedeemed(boxId).call()))
+          const results = await Promise.all(boxes.map(boxId => !PizzaInstance.methods.isRedeemed(boxId).call()))
 
           boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(boxId => {
             const boxOption = document.createElement('option')
