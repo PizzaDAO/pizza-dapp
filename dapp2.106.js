@@ -2835,14 +2835,24 @@ const onLoadHandler = () => {
   const updateValues = async () => {
 
     // Checking total supplies
+
     BoxInstance.methods.totalSupply().call()
       .then((amount) => {
         console.log("BoxInstance.totalSupply: ", amount)
-        //boxesLabel.innerHTML = numberWithCommas(10000 - amount) // for prev versions
+        boxesLabel.innerHTML = numberWithCommas(6000 - amount) // only for prev versions
       })
       .catch((error) => {
         console.log('box totalSupply failed: ', error)
       })
+
+      // Only for BoxV4
+      // BoxInstance.methods.totalNewPurchases().call()
+      // .then((amount) => {
+      //   boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
+      // })
+      // .catch((error) => {
+      //   console.log('box totalNewPurchases failed: ', error)
+      // })
 
       BoxInstance.methods.publicSaleStart_timestampInS().call()
       .then((_saleStart) => {
