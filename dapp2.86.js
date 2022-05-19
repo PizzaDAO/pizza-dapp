@@ -3086,13 +3086,13 @@ const onLoadHandler = () => {
 
   const hide = (element) => {
     //element.style.display = 'none'
-    element.setAttribute("disabled","disabled");
+    element.disabled = true;
     element.style.borderColor = "#4D807E"
   }
 
   const display = (element) => {
     //element.style.display = 'block'
-    element.removeAttribute("disabled")
+    element.disabled = false;
     element.style.borderColor = "#ffcf55"
   }
 
