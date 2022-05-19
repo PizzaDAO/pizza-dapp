@@ -2884,6 +2884,16 @@ const onLoadHandler = () => {
             )
           )
 
+          // clear out select box before we fill it again
+          while (selectBox.options.length > 1) {
+            // if it's the default select option, return
+            if (!selectBox.options[0].value) {
+              return
+            }
+           
+            selectBox.remove(0)
+          }
+
           boxes.filter((_v, index) => results[index]).sort((a, b) => parseInt(a) - parseInt(b)).forEach(boxId => {
             const boxOption = document.createElement('option')
             boxOption.setAttribute("value", boxId)
