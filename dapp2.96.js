@@ -2858,8 +2858,6 @@ const onLoadHandler = () => {
 
     if (walletAddress != 0) {
 
-      let unredeemedBoxes = []
-
       // Check number of boxes
       console.log("walletAddress: ", walletAddress)
       BoxInstance.methods.balanceOf(walletAddress).call()
@@ -2889,7 +2887,6 @@ const onLoadHandler = () => {
                        boxCheckLabel.innerHTML = 'Box was already opened!'
                      } else {
                        console.log("Box still closed: ", boxId)
-                       unredeemedBoxes.push(boxId)
                        boxCheckLabel.innerHTML = 'Box is still closed'
                        pizzaOptions.push(opt)
                        pizzasToRedeem++
