@@ -2741,15 +2741,15 @@ const onLoadHandler = () => {
 
     console.log("walletAddress: ", walletAddress)
     console.log("addressIndex: ", addressIndex)
-    
+
     let numberToMint = selectMintQuantity.value
-    
+
     // if (addressIndex === -1) {
     //   console.log("Not on whitelist")
     // } else {
-    
+
       let date = new Date()
-      
+
       let mainSaleActive
       if(date>(salestart*1000)){
         mainSaleActive = true
@@ -2833,7 +2833,7 @@ const onLoadHandler = () => {
       .catch((error) => {
         console.log('box totalSupply failed: ', error)
       })
-    
+
       BoxInstance.methods.publicSaleStart_timestampInS().call()
       .then((_salestart) => {
           console.log("Salestart: ", _salestart)
@@ -2851,9 +2851,9 @@ const onLoadHandler = () => {
       .catch((error) => {
         console.log('pizza totalSupply failed: ', error)
       })
-    
-    
-  // 
+
+
+  //
     // BoxInstance.methods.totalNewPurchases().call()
     //   .then((amount) => {
     //     boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
@@ -2878,7 +2878,7 @@ const onLoadHandler = () => {
              BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
                .then((boxId) => {
                  console.log("Owner of boxId: ", boxId)
-            
+
                  // Check if it was redeemed
                  PizzaInstance.methods.isRedeemed(boxId).call()
                    .then((value) => {
@@ -3000,7 +3000,7 @@ const onLoadHandler = () => {
 
   const bakePieHandler = async () => {
     console.log('Bake pie button pressed')
-    console.log("pizzasToRedeem: ", pizzasToRedeem)  
+    console.log("pizzasToRedeem: ", pizzasToRedeem)
     if (pizzasToRedeem > 0) {
 
       await handleUser()
@@ -3085,11 +3085,15 @@ const onLoadHandler = () => {
   }
 
   const hide = (element) => {
-    element.style.display = 'none'
+    //element.style.display = 'none'
+    element.disabled = true
+    element.borderColor = "#4D807E"
   }
 
   const display = (element) => {
-    element.style.display = 'block'
+    //element.style.display = 'block'
+    element.disabled = false
+    element.borderColor = "#ffcf55"
   }
 
   const getEthPrice = async () => {
@@ -3136,7 +3140,7 @@ const onLoadHandler = () => {
     console.log("getPresaleProof")
     console.log(walletAddress)
     console.log(claimList)
-    
+
     // Latest version on call with Rhiz
     const leaves = []
     const data = []
@@ -3148,7 +3152,7 @@ const onLoadHandler = () => {
         leaves.push(ethers.utils.solidityKeccak256(['address'], [item.address.toLowerCase()]))
       }
     })
-  
+
     const claimListMerkleTree = new MerkleTree(leaves, keccak256, { sort: true })
     console.log(claimListMerkleTree)
     console.log(claimListMerkleTree.getHexProof(ethers.utils.solidityKeccak256(['address'], [walletAddress])))
