@@ -2952,7 +2952,7 @@ const onLoadHandler = () => {
     if (!addresses.length) {
       console.log("prompting metamask")
       promptMetamask()
-    } else if (inActivePurchase) { 
+    } else if (inActivePurchase) {
       console.log('active purchase in progress')
     } else {
       console.log("triggering purchase")
@@ -3090,7 +3090,7 @@ const onLoadHandler = () => {
   const hide = (element) => {
     inActivePurchase = true
     element.style.pointerEvents = 'none'
-    element.style.borderColor = "#4D807E"
+    element.style.borderColor = "#111425"
   }
 
   const display = (element) => {
