@@ -3087,13 +3087,13 @@ const onLoadHandler = () => {
   const hide = (element) => {
     //element.style.display = 'none'
     element.setAttribute("disabled","disabled");
-    element.borderColor = "#4D807E"
+    element.style.borderColor = "#4D807E"
   }
 
   const display = (element) => {
     //element.style.display = 'block'
     element.removeAttribute("disabled")
-    element.borderColor = "#ffcf55"
+    element.style.borderColor = "#ffcf55"
   }
 
   const getEthPrice = async () => {
