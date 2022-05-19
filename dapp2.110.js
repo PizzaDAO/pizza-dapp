@@ -2834,6 +2834,7 @@ const onLoadHandler = () => {
 }
 
   const updateValues = async () => {
+    const boxes = []
 
     // Checking total supplies
 
@@ -2881,7 +2882,6 @@ const onLoadHandler = () => {
         .then(async (balance) => {
           console.log(walletAddress, " owns ", balance, "boxes")
 
-          const boxes = []
           const promises = []
 
           for (let i = balance; i > 0; i--) {
@@ -2895,13 +2895,7 @@ const onLoadHandler = () => {
 
           const results = await Promise.all(
             boxes.map(boxId =>
-              PizzaInstance.methods.isRedeemed(boxId).call()
-              .then(value => !value
-                console.log("Setting isRedeemed value:", value, " for boxId: ", boxId)
-              )
-              .catch((error) => {
-                console.log('isRedeemed failed: ', error)
-              })
+              PizzaInstance.methods.isRedeemed(boxId).call().then(value => !value)
             )
           )
 
