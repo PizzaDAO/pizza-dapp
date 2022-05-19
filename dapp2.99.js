@@ -2861,7 +2861,7 @@ const onLoadHandler = () => {
       // Check number of boxes
       console.log("walletAddress: ", walletAddress)
       BoxInstance.methods.balanceOf(walletAddress).call()
-        .then((balance) => {
+        .then(async (balance) => {
           console.log(walletAddress, " owns ", balance, "boxes")
 
           const boxes = []
@@ -2872,9 +2872,11 @@ const onLoadHandler = () => {
             promises.push(BoxInstance.methods.tokenOfOwnerByIndex(walletAddress, web3.utils.toBN(balance-i)).call()
               .then((boxId) => boxes.push(boxId)))
           }
+          
           await Promise.all(promises);
           
           const results = await Promise.all(boxes.map(boxId => PizzaInstance.methods.isRedeemed(boxId).call()))
+
           boxes.filter((_v, index) => results[index]).sort((a, b) => a > b).forEach(box => {
             const boxOption = document.createElement('option')
             boxOption.setAttribute("value", box)
