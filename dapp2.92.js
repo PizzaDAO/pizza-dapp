@@ -2856,14 +2856,6 @@ const onLoadHandler = () => {
         console.log('pizza totalSupply failed: ', error)
       })
 
-    BoxInstance.methods.totalNewPurchases().call()
-      .then((amount) => {
-        boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
-      })
-      .catch((error) => {
-        console.log('box totalNewPurchases failed: ', error)
-      })
-
     if (walletAddress != 0) {
 
       let unredeemedBoxes = []
