@@ -2865,7 +2865,11 @@ const onLoadHandler = () => {
       BoxInstance.methods.balanceOf(walletAddress).call()
         .then((balance) => {
           console.log(walletAddress, " owns ", balance, "boxes")
-          pizzasToRedeem = 0
+          
+          const pizzaOptions = []
+          let pizzasToRedeem = 0
+
+          // loop through each box
           for (let i = balance; i > 0; i--) {
 
             // Check address owned ids
@@ -2887,7 +2891,7 @@ const onLoadHandler = () => {
                        console.log("Box still closed: ", boxId)
                        unredeemedBoxes.push(boxId)
                        boxCheckLabel.innerHTML = 'Box is still closed'
-
+                       pizzaOptions.push(opt)
                        pizzasToRedeem++
                      }
 
@@ -2902,15 +2906,12 @@ const onLoadHandler = () => {
                })
           }
 
-          unredeemedBoxes.sort((a,b)=>a-b)
-          for (let i = balance; i > 0; i--) {
-            // Add option to bake pie selector
-            var opt = document.createElement('option');
-            opt.value = boxId;
-            opt.innerHTML = boxId;
-            selectBox.add(opt)
+          // sort select options and push them to select
+          if (pizzaOptions.length) {
+            pizzaOptions
+              .sort((a, b) => parseInt(a.value) > parseInt(b.value))
+              .forEach(pizzaOpt => selectBox.add(pizzaOpt))
           }
-
         })
         .catch((error) => {
           console.log('box balanceOf failed: ', error)
