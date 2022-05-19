@@ -2695,6 +2695,7 @@ let addresses = 0
 let ethPrice = 2045 // fallback (only used on v1 where pizza estimate were shown)
 let metamaskInstalled = false
 let saleStart = 0
+let inActivePurchase = false
 
 // Helpers
 const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -2951,6 +2952,8 @@ const onLoadHandler = () => {
     if (!addresses.length) {
       console.log("prompting metamask")
       promptMetamask()
+    } else if (inActivePurchase) { 
+      console.log('active purchase in progress')
     } else {
       console.log("triggering purchase")
       triggerPurchase()
@@ -3086,13 +3089,13 @@ const onLoadHandler = () => {
 
   const hide = (element) => {
     //element.style.display = 'none'
-    element.disabled = true;
+    inActivePurchase = true
     element.style.borderColor = "#4D807E"
   }
 
   const display = (element) => {
     //element.style.display = 'block'
-    element.disabled = false;
+    inActivePurchase = false
     element.style.borderColor = "#ffcf55"
   }
 
