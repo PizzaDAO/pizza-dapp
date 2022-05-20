@@ -2722,7 +2722,6 @@ const onLoadHandler = () => {
   const selectRecipe = document.querySelector('#selectRecipe')
   const bakePie = document.querySelector('#bakePie')
   const pizzaWarning = document.querySelector('#pizzaWarning')
-  const testPurchase = document.querySelector('#testPurchase')
   //const contractLabel = document.querySelector('#contractLabel')
   //contractLabel.innerHTML = `Contract Address: <p> <a href='https://${NETWORK}etherscan.io/address/${BOX_ADDRESS}' target='_blank'>${BOX_ADDRESS}</a> </p>`
 
@@ -2839,6 +2838,14 @@ const onLoadHandler = () => {
         console.log('box totalSupply failed: ', error)
       })
 
+      BoxInstance.methods.totalNewPurchases().call()
+      .then((amount) => {
+        boxesLabel.innerHTML = numberWithCommas(maxNewPurchases - amount)
+      })
+      .catch((error) => {
+        console.log('box totalNewPurchases failed: ', error)
+      })
+
       BoxInstance.methods.publicSaleStart_timestampInS().call()
       .then((_saleStart) => {
           console.log("Salestart: ", _saleStart)
@@ -2867,7 +2874,6 @@ const onLoadHandler = () => {
 
           const boxes = []
           const promises = []
-          let pizzasToRedeem = 0
 
           for (let i = balance; i > 0; i--) {
             promises.push(
@@ -2875,11 +2881,11 @@ const onLoadHandler = () => {
                 .then((boxId) => boxes.push(boxId))
             )
           }
-          
+
           await Promise.all(promises)
-          
+
           const results = await Promise.all(
-            boxes.map(boxId => 
+            boxes.map(boxId =>
               PizzaInstance.methods.isRedeemed(boxId).call().then(value => !value)
             )
           )
@@ -2890,7 +2896,7 @@ const onLoadHandler = () => {
             if (!selectBox.options[0].value) {
               return
             }
-           
+
             selectBox.remove(0)
           }
 
@@ -2899,7 +2905,6 @@ const onLoadHandler = () => {
             boxOption.setAttribute("value", boxId)
             boxOption.innerHTML = boxId
             selectBox.add(boxOption)
-            pizzasToRedeem++
           })
         })
         .catch((error) => {
@@ -2951,51 +2956,9 @@ const onLoadHandler = () => {
     }
   }
 
-  const testPurchaseHandler = async () => {
-    console.log('Testing purchase')
-
-    await handleUser()
-
-    if (!addresses.length) {
-      console.log("prompting metamask")
-      promptMetamask()
-    } else {
-      console.log("Trying to purchase")
-      BoxInstance.methods.purchase().send({
-        from: walletAddress,
-        value: priceInWei
-      })
-        .on('transactionHash', (hash) => {
-          console.log('transactionHash: ', hash)
-
-          txHash = hash
-          display(buyButton)
-        })
-        .on('receipt', async (receipt) => {
-          console.log('receipt: ', receipt)
-
-          txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-            <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
-
-          await updateValues()
-        })
-        .on('error', (err, receipt) => {
-          console.log('Transaction failed: ', err, 'br/', receipt)
-
-          if (err.code === 4001) {
-            txLabel.innerHTML = 'Transaction rejected'
-          } else {
-            txLabel.innerHTML = 'Something went wrong, try again!'
-          }
-          display(buyButton)
-        })
-    }
-  }
-
   const bakePieHandler = async () => {
     console.log('Bake pie button pressed')
-    console.log("pizzasToRedeem: ", pizzasToRedeem)
-    if (pizzasToRedeem > 0) {
+    if (selectBox.options.length > 1) {
 
       await handleUser()
 
@@ -3219,7 +3182,6 @@ const onLoadHandler = () => {
   buyButton.addEventListener('click', buyButtonHandler)
   checkButton.addEventListener('click', checkButtonHandler)
   bakePie.addEventListener('click', bakePieHandler)
-  testPurchase.addEventListener('click', testPurchaseHandler)
 
   // detect account change
   window.ethereum.on('accountsChanged', function (accounts) {
