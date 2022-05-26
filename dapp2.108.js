@@ -2918,10 +2918,12 @@ const onLoadHandler = () => {
             selectBox.add(boxOption)
           })
           boxes.filter((_v, index) => resultsUnclaimed[index]).sort((a, b) => parseInt(a) - parseInt(b)).forEach(boxId => {
-            const boxOption = document.createElement('option')
-            boxOption.setAttribute("value", boxId)
-            boxOption.innerHTML = boxId
-            claimSelector.add(boxOption)
+            if (boxId < 1560) {
+              const boxOption = document.createElement('option')
+              boxOption.setAttribute("value", boxId)
+              boxOption.innerHTML = boxId
+              claimSelector.add(boxOption)
+            }
           })
 
         })
