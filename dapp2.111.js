@@ -3884,9 +3884,9 @@ const onLoadHandler = () => {
 		} else {
 			mainSaleActive = false;
 		}
-		console.log(date);
-		console.log(saleStart);
-		console.log(mainSaleActive);
+		console.log("salestart timestamp", saleStart);
+		console.log("mainSaleActive", mainSaleActive);
+		console.log("numberToMint", numberToMint);
 		if (mainSaleActive) {
 			BoxInstance.methods
 				.multiPurchase(numberToMint)
