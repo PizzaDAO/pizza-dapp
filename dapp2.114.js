@@ -4026,7 +4026,7 @@ const onLoadHandler = () => {
 					// Boxes to redeem for boxes
 					const resultsUnclaimed = await Promise.all(
 						boxes.map((boxId) =>
-							PizzaInstance.methods
+							BoxInstance.methods
 								.isClaimed(boxId)
 								.call()
 								.then((value) => !value)
@@ -4192,7 +4192,7 @@ const onLoadHandler = () => {
 			} else {
 				console.log("Trying to claim box");
 				console.log("boxId", parseFloat(claimSelector.value));
-				PizzaInstance.methods
+				BoxInstance.methods
 					.claim(parseFloat(claimSelector.value))
 					.send({ from: walletAddress })
 					.on("transactionHash", (hash) => {
