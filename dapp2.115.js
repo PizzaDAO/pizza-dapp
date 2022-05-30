@@ -1,5 +1,5 @@
 const NETWORK = "rinkeby.";
-const BOX_ADDRESS = "0xcee29beca705c97ad2cff2ff7c0ad057ef336ada";
+const BOX_ADDRESS = "0x2dc23f482924d66e2864b039f969a5ca53db02f9";
 const PIZZA_ADDRESS = "0xe21a0adb1031c91b810e55c1ee8b10f101e08608";
 
 const BOX_ABI = [
