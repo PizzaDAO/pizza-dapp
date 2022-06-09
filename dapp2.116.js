@@ -3824,6 +3824,7 @@ let ethPrice = 2045; // fallback (only used on v1 where pizza estimate were show
 let metamaskInstalled = false;
 let saleStart = 0;
 let inActivePurchase = false;
+let maxIdForClaim = 1546;
 
 // Helpers
 const numberWithCommas = (x) =>
@@ -3840,17 +3841,20 @@ const onLoadHandler = () => {
 	const pizzasLabel = document.querySelector("#pizzasLabel");
 	const selectMintQuantity = document.querySelector("#selectionMintQuantity");
 	const buyButton = document.querySelector("#buyButton");
-	const txLabel = document.querySelector("#txLabel");
+	const boxTxLabel = document.querySelector("#boxTxLabel");
 	const boxIdField = document.querySelector("#BoxID");
 	const checkButton = document.querySelector("#checkButton");
 	const boxCheckLabel = document.querySelector("#boxCheckLabel");
 	const selectBox = document.querySelector("#selectBox");
 	const selectRecipe = document.querySelector("#selectRecipe");
 	const bakePie = document.querySelector("#bakePie");
+	const pizzaTxLabel = document.querySelector("#pizzaTxLabel");
 	const pizzaWarning = document.querySelector("#pizzaWarning");
-	const claimButton = document.querySelector("#claimButton");
+	const extraBoxTxLabel = document.querySelector("#extraBoxTxLabel");
 	const claimSelector = document.querySelector("#claimSelector");
 	const claimLabel = document.querySelector("#claimLabel");
+	const boxContractLabel = document.querySelector("#boxContractLabel");
+	const pizzaContractLabel = document.querySelector("#pizzaContractLabel");
 	//const contractLabel = document.querySelector('#contractLabel')
 	//contractLabel.innerHTML = `Contract Address: <p> <a href='https://${NETWORK}etherscan.io/address/${BOX_ADDRESS}' target='_blank'>${BOX_ADDRESS}</a> </p>`
 
@@ -3867,7 +3871,7 @@ const onLoadHandler = () => {
 	};
 
 	const triggerPurchase = () => {
-		txLabel.innerHTML = "Waiting for confirmation";
+		boxTxLabel.innerHTML = "Waiting for confirmation...";
 
 		hide(buyButton);
 
@@ -3902,17 +3906,17 @@ const onLoadHandler = () => {
 				})
 				.on("receipt", async (receipt) => {
 					console.log("receipt: ", receipt);
-					txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-          <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
+					boxTxLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+		  <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
 					await updateValues();
 				})
 				.on("error", (err, receipt) => {
 					console.log("Transaction failed: ", err, "br/", receipt);
 
 					if (err.code === 4001) {
-						txLabel.innerHTML = "Transaction rejected";
+						boxTxLabel.innerHTML = "Transaction rejected";
 					} else {
-						txLabel.innerHTML = "Something went wrong, try again!";
+						boxTxLabel.innerHTML = "Something went wrong, try again!";
 					}
 					display(buyButton);
 				});
@@ -3935,17 +3939,17 @@ const onLoadHandler = () => {
 				})
 				.on("receipt", async (receipt) => {
 					console.log("receipt: ", receipt);
-					txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-          <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
+					boxTxLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+		  <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
 					await updateValues();
 				})
 				.on("error", (err, receipt) => {
 					console.log("Transaction failed: ", err, "br/", receipt);
 
 					if (err.code === 4001) {
-						txLabel.innerHTML = "Transaction rejected";
+						boxTxLabel.innerHTML = "Transaction rejected";
 					} else {
-						txLabel.innerHTML = "Something went wrong, try again!";
+						boxTxLabel.innerHTML = "Something went wrong, try again!";
 					}
 					display(buyButton);
 				});
@@ -3953,6 +3957,7 @@ const onLoadHandler = () => {
 	};
 
 	const updateValues = async () => {
+		console.log("Updating values");
 		// Checking total supplies
 		BoxInstance.methods
 			.totalSupply()
@@ -4074,7 +4079,7 @@ const onLoadHandler = () => {
 						.filter((_v, index) => resultsUnclaimed[index])
 						.sort((a, b) => parseInt(a) - parseInt(b))
 						.forEach((boxId) => {
-							if (boxId < 1560) {
+							if (boxId <= maxIdForClaim) {
 								const boxOption = document.createElement("option");
 								boxOption.setAttribute("value", boxId);
 								boxOption.innerHTML = boxId;
@@ -4145,8 +4150,11 @@ const onLoadHandler = () => {
 				console.log("prompting metamask");
 				promptMetamask();
 			} else {
+				pizzaTxLabel.innerHTML = "Waiting for confirmation...";
+
 				console.log("Trying to bake");
 				console.log("parseFloat boxId", parseFloat(selectBox.value));
+
 				PizzaInstance.methods
 					.redeemRarePizzasBox(
 						parseFloat(selectBox.value),
@@ -4162,8 +4170,8 @@ const onLoadHandler = () => {
 					.on("receipt", async (receipt) => {
 						console.log("receipt: ", receipt);
 
-						pizzaWarning.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
+						pizzaTxLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+			  <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
 
 						await updateValues();
 					})
@@ -4171,9 +4179,9 @@ const onLoadHandler = () => {
 						console.log("Transaction failed: ", err, "br/", receipt);
 
 						if (err.code === 4001) {
-							txLabel.innerHTML = "Transaction rejected";
+							pizzaTxLabel.innerHTML = "Transaction rejected";
 						} else {
-							txLabel.innerHTML = "Something went wrong, try again!";
+							pizzaTxLabel.innerHTML = "Something went wrong, try again!";
 						}
 						display(buyButton);
 					});
@@ -4190,8 +4198,11 @@ const onLoadHandler = () => {
 				console.log("prompting metamask");
 				promptMetamask();
 			} else {
+				extraBoxTxLabel.innerHTML = "Waiting for confirmation...";
+
 				console.log("Trying to claim box");
 				console.log("boxId", parseFloat(claimSelector.value));
+
 				BoxInstance.methods
 					.claim(parseFloat(claimSelector.value))
 					.send({ from: walletAddress })
@@ -4203,8 +4214,8 @@ const onLoadHandler = () => {
 					.on("receipt", async (receipt) => {
 						console.log("receipt: ", receipt);
 
-						pizzaWarning.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-              <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
+						extraBoxTxLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
+			  <a href='https://${NETWORK}etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
 
 						await updateValues();
 					})
@@ -4212,9 +4223,9 @@ const onLoadHandler = () => {
 						console.log("Transaction failed: ", err, "br/", receipt);
 
 						if (err.code === 4001) {
-							txLabel.innerHTML = "Transaction rejected";
+							extraBoxTxLabel.innerHTML = "Transaction rejected";
 						} else {
-							txLabel.innerHTML = "Something went wrong, try again!";
+							extraBoxTxLabel.innerHTML = "Something went wrong, try again!";
 						}
 						display(buyButton);
 					});
@@ -4242,6 +4253,27 @@ const onLoadHandler = () => {
 							boxCheckLabel.innerHTML = "Box was already opened!";
 						} else {
 							boxCheckLabel.innerHTML = "Box is still closed!";
+						}
+						if (boxIdField.value <= maxIdForClaim) {
+							BoxInstance.methods
+								.isClaimed(boxIdField.value)
+								.call()
+								.then((value) => {
+									console.log("isClaimed: ", value);
+									if (value) {
+										boxCheckLabel.innerHTML +=
+											" Extra box was already claimed.";
+									} else {
+										boxCheckLabel.innerHTML += " Extra box is still claimable!";
+									}
+								})
+								.catch((error) => {
+									boxCheckLabel.innerHTML += " isClaimed failed!";
+									console.log("isClaimed failed: ", error);
+								});
+						} else {
+							boxCheckLabel.innerHTML += " No extra box.";
+							console.log("No extra box: boxId <= maxIdForClaim");
 						}
 					})
 					.catch((error) => {
@@ -4386,18 +4418,34 @@ const onLoadHandler = () => {
 		BoxInstance = new web3.eth.Contract(BOX_ABI, BOX_ADDRESS);
 		PizzaInstance = new web3.eth.Contract(PIZZA_ABI, PIZZA_ADDRESS);
 
+		boxContractLabel.innerHTML = `Contract Address: <p> <a class="link-82" href='https://${NETWORK}etherscan.io/address/${BOX_ADDRESS}' target='_blank'> ${BOX_ADDRESS} </a> </p>`;
+		pizzaContractLabel.innerHTML = `Contract Address: <p> <a class="link-82" href='https://${NETWORK}etherscan.io/address/${PIZZA_ADDRESS}' target='_blank'> ${PIZZA_ADDRESS} </a> </p>`;
+
 		BoxInstance.events
 			.Transfer((err, e) => {
-				console.log(e);
+				console.log("Box transfer: ", e);
 			})
 			.on("data", async (e) => {
-				console.log("event: ", e);
+				console.log("Box transfer event: ", e);
 				await updateValues();
 			})
 			.on("changed", (i) => {
-				console.log("changed: ", i);
+				console.log("Box tranfer changed: ", i);
 			})
-			.on("error on Transfer", console.error);
+			.on("Error on Box transfer", console.error);
+
+		PizzaInstance.events
+			.Transfer((err, e) => {
+				console.log("Pizza transfer: ", e);
+			})
+			.on("data", async (e) => {
+				console.log("Pizza transfer event: ", e);
+				await updateValues();
+			})
+			.on("changed", (i) => {
+				console.log("Pizza transfer changed: ", i);
+			})
+			.on("Error on Pizza transfer", console.error);
 
 		await handleUser();
 		await updateValues();
@@ -4428,7 +4476,6 @@ const onLoadHandler = () => {
 
 			window.alert("Browser not compatible. Try Chrome and MetaMask!");
 
-			txLabel.innerHTML = "Try Chrome and MetaMask!";
 			metamaskInstalled = false;
 		}
 	};
@@ -4443,12 +4490,14 @@ const onLoadHandler = () => {
 
 	// detect account change
 	window.ethereum.on("accountsChanged", function (accounts) {
-		console.log("accountsChanges", accounts);
+		console.log("accountsChanged", accounts);
+		updateValues();
 	});
 
 	// detect network change
 	window.ethereum.on("chainChanged", function (chainId) {
 		console.log("chainChanged", chainId);
+		updateValues();
 	});
 };
 
