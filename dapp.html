@@ -1,451 +1,524 @@
-<script src='https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js'></script>
-
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.7.5/dist/index.cjs.min.js
+"></script>
 <script>
-  const ERC721_ADDRESS = '0xe6b01387aa8042c13951335982e5cd3aa1255389'
+  const ERC721_ADDRESS = "0xe6b01387aa8042c13951335982e5cd3aa1255389";
   const ERC721_ABI = [
     {
       anonymous: false,
       inputs: [
         {
           indexed: false,
-          internalType: 'uint256',
-          name: 'old',
-          type: 'uint256'
+          internalType: "uint256",
+          name: "old",
+          type: "uint256",
         },
         {
           indexed: false,
-          internalType: 'uint256',
-          name: 'current',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "current",
+          type: "uint256",
+        },
       ],
-      name: 'BTCETHPriceUpdated',
-      type: 'event'
+      name: "BTCETHPriceUpdated",
+      type: "event",
     },
     {
       anonymous: false,
       inputs: [
         {
           indexed: true,
-          internalType: 'address',
-          name: 'from',
-          type: 'address'
+          internalType: "address",
+          name: "from",
+          type: "address",
         },
         {
           indexed: true,
-          internalType: 'address',
-          name: 'to',
-          type: 'address'
+          internalType: "address",
+          name: "to",
+          type: "address",
         },
         {
           indexed: true,
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "tokenId",
+          type: "uint256",
+        },
       ],
-      name: 'Transfer',
-      type: 'event'
+      name: "Transfer",
+      type: "event",
     },
     {
-      inputs: [ ],
-      name: 'getBitcoinPriceInWei',
+      inputs: [],
+      name: "getBitcoinPriceInWei",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'getPrice',
+      inputs: [],
+      name: "getPrice",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'getPriceInWei',
+      inputs: [],
+      name: "getPriceInWei",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'maxSupply',
+      inputs: [],
+      name: "maxSupply",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'publicSaleStart_timestampInS',
+      inputs: [],
+      name: "publicSaleStart_timestampInS",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'purchase',
-      outputs: [ ],
-      stateMutability: 'payable',
-      type: 'function'
+      inputs: [],
+      name: "purchase",
+      outputs: [],
+      stateMutability: "payable",
+      type: "function",
     },
     {
       inputs: [
         {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "tokenId",
+          type: "uint256",
+        },
       ],
-      name: 'tokenURI',
+      name: "tokenURI",
       outputs: [
         {
-          internalType: 'string',
-          name: '',
-          type: 'string'
-        }
+          internalType: "string",
+          name: "",
+          type: "string",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
+      stateMutability: "view",
+      type: "function",
     },
     {
-      inputs: [ ],
-      name: 'totalSupply',
+      inputs: [],
+      name: "totalSupply",
       outputs: [
         {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-        }
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
       ],
-      stateMutability: 'view',
-      type: 'function'
-    }
-  ]
+      stateMutability: "view",
+      type: "function",
+    },
+  ];
 
   window.rarePizzasBox = {
     ABI: ERC721_ABI,
     ADDRESS: ERC721_ADDRESS,
-  }
+  };
 </script>
 <script>
-  const { rarePizzasBox } = window
-  const ethSymbol = 'Ξ'
-  const btcSymbol = '₿'
+  const { rarePizzasBox } = window;
+  const ethSymbol = "Ξ";
+  const btcSymbol = "₿";
 
-  let maxSupply = 10000
-  let totalSupply = 0
-  let buyPrice = 0.0001
-  let walletAddress = 0
-  let addresses = 0
-  let btcPrice = 30
-  let ethPrice = 1800
-  let metamaskInstalled = false
-  let Erc721Instance
+  let maxSupply = 10000;
+  let totalSupply = 0;
+  let buyPrice = 0.0001;
+  let walletAddress = 0;
+  let addresses = 0;
+  let btcPrice = 30;
+  let ethPrice = 1800;
+  let metamaskInstalled = false;
+  let Erc721Instance;
 
-  const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  const numberWithCommas = (x) =>
+    x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const isMobile = () =>
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
 
   const onLoadHandler = () => {
-    const { ADDRESS: CONTRACT_ADDRESS } = rarePizzasBox
-    const walletButton = document.querySelector('#walletButton')
-    const balanceLabel = document.querySelector('#balanceLabel')
-    const ethPriceLabel = document.querySelector('#ethPriceLabel')
-    const btcPriceLabel = document.querySelector('#btcPriceLabel')
-    const pizzasLabel = document.querySelector('#pizzasLabel')
-    const buyButton = document.querySelector('#buyButton')
-    const contractLabel = document.querySelector('#contractLabel')
-    const txLabel = document.querySelector('#txLabel')
-    const estimateLabel = document.querySelector('#estimateLabel')
+    const { ADDRESS: CONTRACT_ADDRESS } = rarePizzasBox;
+    const walletButton = document.querySelector("#walletButton");
+    const balanceLabel = document.querySelector("#balanceLabel");
+    const ethPriceLabel = document.querySelector("#ethPriceLabel");
+    const btcPriceLabel = document.querySelector("#btcPriceLabel");
+    const pizzasLabel = document.querySelector("#pizzasLabel");
+    const buyButton = document.querySelector("#buyButton");
+    const contractLabel = document.querySelector("#contractLabel");
+    const txLabel = document.querySelector("#txLabel");
+    const estimateLabel = document.querySelector("#estimateLabel");
 
-    balanceLabel.innerHTML = '--' + ' ' + ethSymbol
-    ethPriceLabel.innerHTML = '--' + ' ' + ethSymbol
-    btcPriceLabel.innerHTML = '--' + ' ' + btcSymbol
-    pizzasLabel.innerHTML = '--'
-    contractLabel.innerHTML = `Contract Address: <p> <a href='https://etherscan.io/address/${CONTRACT_ADDRESS}' target='_blank'>${CONTRACT_ADDRESS}</a> </p>`
-    txLabel.innerHTML = 'You will be charged 20% more than current price, remaining will be returned on the same transaction'
+    balanceLabel.innerHTML = "--" + " " + ethSymbol;
+    ethPriceLabel.innerHTML = "--" + " " + ethSymbol;
+    btcPriceLabel.innerHTML = "--" + " " + btcSymbol;
+    pizzasLabel.innerHTML = "--";
+    contractLabel.innerHTML = `Contract Address: <p> <a href='https://etherscan.io/address/${CONTRACT_ADDRESS}' target='_blank'>${CONTRACT_ADDRESS}</a> </p>`;
+    txLabel.innerHTML =
+      "You will be charged 20% more than current price, remaining will be returned on the same transaction";
 
     const promptMetamask = () => {
-      window.ethereum.enable()
+      window.ethereum
+        .enable()
         .then(async () => {
-          walletButton.innerHTML = '<center>Connected</center>'
+          walletButton.innerHTML = "<center>Connected</center>";
 
-          await updateBalance()
-        }).catch((err) => {
-          console.log(err)
+          await updateBalance();
         })
-    }
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     const triggerPurchase = () => {
-      txLabel.innerHTML = 'Waiting for confirmation'
+      txLabel.innerHTML = "Waiting for confirmation";
 
-      hide(buyButton)
+      hide(buyButton);
 
-      const gasPrice = 145
-      const gasLimit = 256 * 1000
+      const gasPrice = 145;
+      const gasLimit = 256 * 1000;
 
-      let txHash = 0
+      let txHash = 0;
 
-      Erc721Instance.methods.getPrice().call()
+      Erc721Instance.methods
+        .getPrice()
+        .call()
         .then((weiValue) => {
-          console.log('weiValue: ', weiValue)
+          console.log("weiValue: ", weiValue);
 
-          const roundAmount = parseFloat(1.2 * weiValue).toFixed(0)
+          const roundAmount = parseFloat(1.2 * weiValue).toFixed(0);
 
-          Erc721Instance.methods.purchase().send({
-            from: walletAddress,
-            value: (roundAmount),
-            gasPrice: web3.utils.toHex(gasPrice * 1e9),
-            gasLimit: web3.utils.toHex(gasLimit)
-          })
-            .on('transactionHash', (hash) => {
-              console.log('transactionHash: ', hash)
-
-              txHash = hash
+          Erc721Instance.methods
+            .purchase()
+            .send({
+              from: walletAddress,
+              value: roundAmount,
+              gasPrice: web3.utils.toHex(gasPrice * 1e9),
+              gasLimit: web3.utils.toHex(gasLimit),
             })
-            .on('receipt', (receipt) => {
-              console.log('receipt: ', receipt)
+            .on("transactionHash", (hash) => {
+              console.log("transactionHash: ", hash);
+
+              txHash = hash;
+            })
+            .on("receipt", (receipt) => {
+              console.log("receipt: ", receipt);
 
               txLabel.innerHTML = `Transaction confirmed, enjoy your 🍕! <p>
-                <a href='https://etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`
+                <a href='https://etherscan.io/tx/${txHash}' target='_blank'> Transaction link </a> </p>`;
 
-              updateValues()
-              display(buyButton)
+              updateValues();
+              display(buyButton);
             })
-            .on('error', (err, receipt) => {
-              console.log('Transaction failed: ', err, 'br/', receipt)
+            .on("error", (err, receipt) => {
+              console.log("Transaction failed: ", err, "br/", receipt);
 
               if (err.code === 4001) {
-                txLabel.innerHTML = 'Transaction rejected'
+                txLabel.innerHTML = "Transaction rejected";
               } else {
-                txLabel.innerHTML = 'Something went wrong, try again!'
+                txLabel.innerHTML = "Something went wrong, try again!";
               }
-              display(buyButton)
-            })
+              display(buyButton);
+            });
         })
         .catch((error) => {
-          console.log('getPrice failed: ', error)
-          txLabel.innerHTML = 'Something went wrong, try again!'
-        })
-    }
+          console.log("getPrice failed: ", error);
+          txLabel.innerHTML = "Something went wrong, try again!";
+        });
+    };
 
     const updateValues = () => {
-      Erc721Instance.methods.getPrice().call()
+      Erc721Instance.methods
+        .getPrice()
+        .call()
         .then((amount) => {
-          buyPrice = web3.utils.fromWei(amount)
+          buyPrice = web3.utils.fromWei(amount);
 
-          const roundPrice = parseFloat(buyPrice).toFixed(4)
+          const roundPrice = parseFloat(buyPrice).toFixed(4);
 
-          btcPriceLabel.innerHTML = roundPrice + ' ' + ethSymbol
+          btcPriceLabel.innerHTML = roundPrice + " " + ethSymbol;
         })
         .catch((error) => {
-          console.log('getPrice failed: ', error)
-        })
+          console.log("getPrice failed: ", error);
+        });
 
-      Erc721Instance.methods.maxSupply().call()
+      Erc721Instance.methods
+        .maxSupply()
+        .call()
         .then((amount) => {
-          maxSupply = amount
+          maxSupply = amount;
 
-          pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
+          pizzasLabel.innerHTML = numberWithCommas(
+            maxSupply - totalSupply - 1250
+          );
         })
         .catch((error) => {
-          console.log('maxSupply failed: ', error)
-        })
+          console.log("maxSupply failed: ", error);
+        });
 
-      Erc721Instance.methods.totalSupply().call()
+      Erc721Instance.methods
+        .totalSupply()
+        .call()
         .then((amount) => {
-          totalSupply = amount
+          totalSupply = amount;
 
-          pizzasLabel.innerHTML = numberWithCommas(maxSupply - totalSupply - 1250)
+          pizzasLabel.innerHTML = numberWithCommas(
+            maxSupply - totalSupply - 1250
+          );
         })
         .catch((error) => {
-          console.log('totalSupply failed: ', error)
-        })
+          console.log("totalSupply failed: ", error);
+        });
 
-      Erc721Instance.methods.getBitcoinPriceInWei().call()
+      Erc721Instance.methods
+        .getBitcoinPriceInWei()
+        .call()
         .then((amount) => {
-          btcPrice = web3.utils.fromWei(amount)
+          btcPrice = web3.utils.fromWei(amount);
 
-          console.log('BtcPrice: ', btcPrice)
+          console.log("BtcPrice: ", btcPrice);
 
-          const roundPrice2 = parseFloat(buyPrice/btcPrice).toFixed(4)
+          const roundPrice2 = parseFloat(buyPrice / btcPrice).toFixed(4);
 
-          ethPriceLabel.innerHTML = roundPrice2 + ' ' + btcSymbol
+          ethPriceLabel.innerHTML = roundPrice2 + " " + btcSymbol;
         })
         .catch((error) => {
-          console.log('getBtcPrice failed: ', error)
-        })
-
-    }
+          console.log("getBtcPrice failed: ", error);
+        });
+    };
 
     const handleUser = () => {
-      web3.eth.getAccounts()
+      web3.eth
+        .getAccounts()
         .then(async (accounts) => {
-          addresses = accounts
+          addresses = accounts;
 
           if (!accounts.length) {
-            walletButton.innerHTML = '<center>Connect Wallet</center>'
+            walletButton.innerHTML = "<center>Connect Wallet</center>";
           } else {
-            walletButton.innerHTML = '<center>Connected</center>'
+            walletButton.innerHTML = "<center>Connected</center>";
 
-            await updateBalance()
+            await updateBalance();
           }
-        }).catch((err) => {
-          console.log('Error fetching accounts: ', err)
         })
-    }
+        .catch((err) => {
+          console.log("Error fetching accounts: ", err);
+        });
+    };
 
     const updateBalance = async () => {
-      console.log('updating balance')
+      console.log("updating balance");
 
-      walletAddress = (await web3.eth.getAccounts())[0]
+      walletAddress = (await web3.eth.getAccounts())[0];
 
-      const walletBalance = await web3.eth.getBalance(walletAddress)
-      const balance = web3.utils.fromWei(walletBalance)
+      const walletBalance = await web3.eth.getBalance(walletAddress);
+      const balance = web3.utils.fromWei(walletBalance);
 
-      console.log('wallet balance: ', walletBalance)
+      console.log("wallet balance: ", walletBalance);
 
-      const roundedBalance = parseFloat(balance).toFixed(4)
+      const roundedBalance = parseFloat(balance).toFixed(4);
 
-      balanceLabel.innerHTML = roundedBalance + ' ' + ethSymbol
-    }
+      balanceLabel.innerHTML = roundedBalance + " " + ethSymbol;
+    };
 
     const buyButtonHandler = () => {
-      console.log('Buy button pressed')
+      console.log("Buy button pressed");
 
-      handleUser()
+      handleUser();
 
       if (!addresses.length) {
-        promptMetamask()
+        promptMetamask();
       } else {
-        triggerPurchase()
+        triggerPurchase();
       }
-    }
+    };
 
     const walletButtonHandler = () => {
-      console.log('Wallet button pressed')
+      console.log("Wallet button pressed");
 
       if (metamaskInstalled) {
-        promptMetamask()
+        promptMetamask();
       } else {
-        window.open('https://www.metamask.io')
+        window.open("https://www.metamask.io");
       }
-    }
+    };
 
     const hide = (element) => {
-      element.style.display = 'none'
-    }
+      element.style.display = "none";
+    };
 
     const display = (element) => {
-      element.style.display = 'block'
-    }
+      element.style.display = "block";
+    };
 
     const getEthPrice = async () => {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-        const result = await response.json()
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        );
+        const result = await response.json();
 
-        console.log('result: ', ethPrice);
+        console.log("result: ", ethPrice);
 
-        ethPrice = result.ethereum.usd
+        ethPrice = result.ethereum.usd;
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     const startApp = async () => {
-      getEthPrice()
+      getEthPrice();
 
-      Erc721Instance = new web3.eth.Contract(rarePizzasBox.ABI, rarePizzasBox.ADDRESS)
-      web3.eth.getBalance(rarePizzasBox.ADDRESS)
-        .then((weiBalance) => {
-          const cBalance = web3.utils.fromWei(weiBalance)
+      Erc721Instance = new web3.eth.Contract(
+        rarePizzasBox.ABI,
+        rarePizzasBox.ADDRESS
+      );
+      web3.eth.getBalance(rarePizzasBox.ADDRESS).then((weiBalance) => {
+        const cBalance = web3.utils.fromWei(weiBalance);
 
-          console.log('Contract balance: ', cBalance, 'ethPrice: ', ethPrice)
+        console.log("Contract balance: ", cBalance, "ethPrice: ", ethPrice);
 
-          estimateLabel.innerHTML = 'Incoming Pizzas: ' + numberWithCommas((((cBalance * ethPrice)/2)/25).toFixed(0)) + ' 🍕'
+        estimateLabel.innerHTML =
+          "Incoming Pizzas: " +
+          numberWithCommas(((cBalance * ethPrice) / 2 / 25).toFixed(0)) +
+          " 🍕";
+      });
+
+      Erc721Instance.events
+        .Transfer((err, e) => {
+          console.log(e);
         })
+        .on("data", (e) => {
+          console.log("event: ", e);
 
-      Erc721Instance.events.Transfer((err, e) => { console.log(e) })
-        .on('data', (e) =>{
-          console.log('event: ', e)
-
-          updateValues()
+          updateValues();
         })
-        .on('changed', (i) => {
-          console.log('changed: ', i)
+        .on("changed", (i) => {
+          console.log("changed: ", i);
         })
-        .on('error on Transfer', console.error)
+        .on("error on Transfer", console.error);
 
-      updateValues()
-      handleUser()
-    }
+      updateValues();
+      handleUser();
+    };
 
     const initWeb3 = () => {
       if (window.ethereum) {
-        console.log('Window.ethereum exists')
+        console.log("Window.ethereum exists");
 
-        metamaskInstalled = true
-        window.web3 = new Web3(window.ethereum)
+        metamaskInstalled = true;
+        window.web3 = new Web3(window.ethereum);
 
-        startApp()
+        startApp();
       } else if (window.web3) {
-        console.log('Window.web3 exists')
+        console.log("Window.web3 exists");
 
-        metamaskInstalled = true
-        window.web3 = new Web3(window.web3.currentProvider)
+        metamaskInstalled = true;
+        window.web3 = new Web3(window.web3.currentProvider);
 
-        startApp()
+        startApp();
       } else if (isMobile) {
-        console.log('Mobile initiated')
+        console.log("Mobile initiated");
 
-        metamaskInstalled = true
-        startApp()
+        metamaskInstalled = true;
+        startApp();
       } else {
-        console.log('Non-ethereum browser detected')
+        console.log("Non-ethereum browser detected");
 
-        window.alert('Browser not compatible. Try Chrome and MetaMask!')
+        window.alert("Browser not compatible. Try Chrome and MetaMask!");
 
-        txLabel.innerHTML = 'Try Chrome and MetaMask!'
-        metamaskInstalled = false
+        txLabel.innerHTML = "Try Chrome and MetaMask!";
+        metamaskInstalled = false;
       }
-    }
+    };
 
-    initWeb3()
+    const walletConnect = async () => {
+      try {
+        connectButton.disabled = true;
+        let projectId=''// need to load through .env here somehow
+        // 5. Create ethereum provider, if one doesn't exist
+        if (!ethereumProvider) {
+          ethereumProvider = await EthereumProvider.init({
+            projectId,
+            showQrModal: true,
+            qrModalOptions: { themeMode: "light" },
+            chains: [1],
+            methods: ["eth_sendTransaction", "personal_sign"],
+            events: ["chainChanged", "accountsChanged"],
+            metadata: {
+              name: "My Dapp",
+              description: "My Dapp description",
+              url: "https://my-dapp.com",
+              icons: ["https://my-dapp.com/logo.png"],
+            },
+          });
 
-    walletButton.addEventListener('click', walletButtonHandler)
-    buyButton.addEventListener('click', buyButtonHandler)
-  }
+          // 6. Set up connection listener
+          ethereumProvider.on("connect", () => {
+            //console.info(ethereumProvider.accounts);
+            window.web3 = new Web3(ethereumProvider)
+          });
+        }
 
-  window.addEventListener('load', onLoadHandler, { once: true })
+        ethereumProvider.connect();
+      } catch (err) {
+        console.error(err);
+      } finally {
+        connectButton.disabled = false;
+      }
+    };
+
+    initWeb3();
+
+    walletButton.addEventListener("click", walletButtonHandler);
+    walletConnectButton.addEventListener("click", walletConnect);
+    buyButton.addEventListener("click", buyButtonHandler);
+  };
+
+  window.addEventListener("load", onLoadHandler, { once: true });
 </script>
